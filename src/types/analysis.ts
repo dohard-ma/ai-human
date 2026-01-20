@@ -10,11 +10,18 @@ export interface HumanGraphAnalysis {
     root: boolean;
     spleen: boolean;
   };
-  channels: {
-    from: string;
-    to: string;
-    defined: boolean;
-  }[];
+  channels: [
+    {
+      from: string;
+      to: string;
+      defined: boolean;
+    },
+    {
+      from: string;
+      to: string;
+      defined: boolean;
+    }
+  ][];
   gates: {
     number: number;
     defined: boolean;
