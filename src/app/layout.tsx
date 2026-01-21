@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 const themeInitScript = `
 (() => {
   try {
-    const theme = localStorage.getItem("cockpit_theme") || "dark";
+    const theme = localStorage.getItem("cockpit_theme") || "light";
     const root = document.documentElement;
     if (theme === "dark") {
       root.classList.add("dark");
