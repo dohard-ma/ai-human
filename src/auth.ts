@@ -52,6 +52,10 @@ function htmlTemplate({ url, host }: { url: string; host: string }) {
               立即登录系统
             </a>
           </div>
+          <div style="background-color: #f3f4f6; padding: 12px; border-radius: 6px; margin: 20px 0;">
+            <p style="font-size: 12px; color: #6b7280; margin: 0 0 8px 0;">如果按钮无法点击，请复制以下链接到浏览器打开：</p>
+            <p style="font-size: 12px; color: ${brandColor}; word-break: break-all; margin: 0;">${url}</p>
+          </div>
           <p style="font-size: 12px; color: #9ca3af;">注意：此链接在 24 小时内有效。如果你没有尝试登录，请忽略此邮件。</p>
         </div>
         <div style="background-color: #f3f4f6; padding: 20px; text-align: center; font-size: 12px; color: #6b7280;">
