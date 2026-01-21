@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
 
 export default async function WelcomePage() {
-  const { userId } = await auth();
-  if (userId) {
+  const session = await auth();
+  if (session) {
     redirect("/");
   }
 
@@ -15,7 +15,8 @@ export default async function WelcomePage() {
         <div className="space-y-2">
           <h1 className="text-2xl font-black tracking-tight">欢迎回来</h1>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            这里是你的 Cockpit 首页。登录后即可读取并管理你的任务、习惯、日志与想法。
+            这里是你的 Cockpit
+            首页。登录后即可读取并管理你的任务、习惯、日志与想法。
           </p>
         </div>
         <div className="flex flex-col sm:flex-row gap-3">

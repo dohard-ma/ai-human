@@ -1,6 +1,7 @@
-import { clerkMiddleware } from "@clerk/nextjs/server";
+import NextAuth from "next-auth";
+import { authConfig } from "./auth.config";
 
-export default clerkMiddleware();
+export default NextAuth(authConfig).auth;
 
 export const config = {
   matcher: [
