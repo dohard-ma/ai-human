@@ -5,53 +5,189 @@ import { ChatMessage } from "@/components/chat/ChatMessage";
 import { ThoughtReport } from "@/components/chat/ThoughtReport";
 import { ChatInput } from "@/components/chat/ChatInput";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { getLastConversation } from "@/app/actions/chat-data";
 
-const MOCK_MESSAGES = [
-  {
-    role: "assistant" as const,
-    content:
-      "「小红书插件，能自动跟踪收藏博主的新内容，帮做对标，要不要免费试下？」只发这一句，不用多聊，先拿第一个愿意试的反馈，这一步比你打磨 10 次功能都管用。\n\n这个动作没有任何技术门槛，就是打破你“造完就搁置”的惯性，先让你的工具走出硬盘，拿到第一份真实的市场回应。",
-  },
-  {
-    role: "user" as const,
-    content:
-      "好吧，我觉得你说的还挺准确的。你是否现在给我生成一下我的天赋报告？",
-  },
-];
-
-const MOCK_REPORT = {
-  thought:
-    "用户现在问能不能听到讲话，首先要回应能听到，语气友好一点，符合陪聊的要求，然后延续话题。用户之前是自由职业者，全栈开发，不过追问不能涉及这些洞察。按照要求，回复 1-3 句话，结尾提sahfshfdyasfhgdasdfjdksafhgajfahsdfnfvjdsafdjasgfasfd...",
-  answer:
-    "能听到呀，你讲得很清楚~\n\n最近有没有碰到什么有意思的小事。按照要求，回复 1-3 句话，结尾提sahfshfdyasfhgdasdfjdksafhgajfahsdfnfvjdsafdjasgfasfd。按照要求，回复 1-3 句话，结尾提sahfshfdyasfhgdasdfjdksafhgajfahsdfnfvjdsafdjasgfasfd。按照要求，回复 1-3 句话，结尾提sahfshfdyasfhgdasdfjdksafhgajfahsdfnfvjdsafdjasgfasfd。按照要求，回复 1-3 句话，结尾提sahfshfdyasfhgdasdfjdksafhgajfahsdfnfvjdsafdjasgfasfd呀？",
-};
+interface Message {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  thought?: string | null;
+}
 
 export default function ChatPage() {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [conversationId, setConversationId] = useState<string | undefined>();
+  const [streamingThought, setStreamingThought] = useState("");
+  const [streamingContent, setStreamingContent] = useState("");
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // 加载历史记录
+  useEffect(() => {
+    const loadHistory = async () => {
+      const lastConv = await getLastConversation();
+      if (lastConv) {
+        setConversationId(lastConv.id);
+        setMessages(lastConv.messages as Message[]);
+      }
+    };
+    loadHistory();
+  }, []);
+
+  // 自动滚动到底部
+  const scrollToBottom = useCallback(() => {
+    if (scrollRef.current) {
+      const scrollContainer = scrollRef.current.querySelector(
+        "[data-radix-scroll-area-viewport]",
+      );
+      if (scrollContainer) {
+        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, streamingContent, streamingThought, scrollToBottom]);
+
+  const handleSend = async (content: string) => {
+    if (loading) return;
+
+    // 添加用户消息到 UI
+    const userMsg: Message = {
+      id: Date.now().toString(),
+      role: "user",
+      content,
+    };
+    setMessages((prev) => [...prev, userMsg]);
+    setLoading(true);
+    setStreamingThought("");
+    setStreamingContent("");
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ content, conversationId }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to send message");
+      }
+
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error("No reader available");
+      }
+
+      const decoder = new TextDecoder();
+      let messageId: string | undefined;
+      let finalThought = "";
+      let finalContent = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split("\n");
+
+        for (const line of lines) {
+          if (line.startsWith("data: ")) {
+            try {
+              const data = JSON.parse(line.slice(6));
+
+              switch (data.type) {
+                case "init":
+                  setConversationId(data.conversationId);
+                  break;
+                case "thought":
+                  finalThought += data.content;
+                  setStreamingThought((prev) => prev + data.content);
+                  break;
+                case "content":
+                  finalContent += data.content;
+                  setStreamingContent((prev) => prev + data.content);
+                  break;
+                case "done":
+                  messageId = data.messageId;
+                  break;
+                case "error":
+                  console.error("Stream error:", data.message);
+                  break;
+              }
+            } catch {
+              // 忽略解析错误
+            }
+          }
+        }
+      }
+
+      // 流式完成，添加完整消息
+      if (messageId) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: messageId,
+            role: "assistant",
+            content: finalContent,
+            thought: finalThought || null,
+          },
+        ]);
+      }
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    } finally {
+      setLoading(false);
+      setStreamingThought("");
+      setStreamingContent("");
+    }
+  };
+
   return (
     <div className="flex h-dvh flex-col bg-background">
       <ChatHeader />
 
       <main className="flex-1 overflow-hidden relative">
-        <ScrollArea className="h-full">
+        <ScrollArea className="h-full" ref={scrollRef}>
           <div
             className="max-w-2xl mx-auto pt-4 pb-48 space-y-6"
             style={{ contain: "inline-size" }}
           >
-            {MOCK_MESSAGES.map((msg, i) => (
-              <ChatMessage key={i} role={msg.role} content={msg.content} />
+            {messages.map((msg) => (
+              <div key={msg.id}>
+                {msg.role === "assistant" && msg.thought ? (
+                  <div className="px-4">
+                    <ThoughtReport thought={msg.thought} answer={msg.content} />
+                  </div>
+                ) : (
+                  <ChatMessage role={msg.role} content={msg.content} />
+                )}
+              </div>
             ))}
 
-            <div className="px-4">
-              <ThoughtReport
-                thought={MOCK_REPORT.thought}
-                answer={MOCK_REPORT.answer}
-              />
-            </div>
+            {/* 流式响应显示 */}
+            {loading && (
+              <div className="px-4">
+                {streamingThought || streamingContent ? (
+                  <ThoughtReport
+                    thought={streamingThought || "正在思考中..."}
+                    answer={streamingContent}
+                    status={streamingContent ? "complete" : "thinking"}
+                  />
+                ) : (
+                  <ThoughtReport thought="正在思考中..." status="thinking" />
+                )}
+              </div>
+            )}
           </div>
         </ScrollArea>
       </main>
 
-      <ChatInput />
+      <ChatInput onSend={handleSend} disabled={loading} />
     </div>
   );
 }

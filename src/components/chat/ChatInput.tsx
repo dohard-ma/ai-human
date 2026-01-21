@@ -6,8 +6,28 @@ import {
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
-export function ChatInput() {
+export function ChatInput({
+  onSend,
+  disabled,
+}: {
+  onSend: (message: string) => void;
+  disabled?: boolean;
+}) {
   const [inputValue, setInputValue] = useState("");
+
+  const handleSend = () => {
+    if (inputValue.trim() && !disabled) {
+      onSend(inputValue.trim());
+      setInputValue("");
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-xl border-t border-border/20 p-4 pb-10 space-y-4 max-w-2xl mx-auto">
@@ -17,6 +37,7 @@ export function ChatInput() {
         <button
           className="p-2 rounded-full hover:bg-secondary transition-colors shrink-0"
           aria-label="相机"
+          disabled={disabled}
         >
           <Camera className="size-7 text-foreground/70" />
         </button>
@@ -27,15 +48,21 @@ export function ChatInput() {
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            placeholder="发送消息..."
+            onKeyDown={handleKeyDown}
+            placeholder={disabled ? "AI 正在思考..." : "发送消息..."}
+            disabled={disabled}
             className="w-full h-12 bg-transparent border-none focus:ring-0 px-4 text-base text-foreground placeholder:text-foreground/30"
           />
         </div>
 
-        {/* Right Send Button (Optional) */}
-        {inputValue.length > 0 && (
-          <button className="h-11 px-5 rounded-full bg-primary text-primary-foreground font-semibold text-sm transition-all active:scale-95 shrink-0">
-            发送
+        {/* Right Send Button */}
+        {(inputValue.length > 0 || disabled) && (
+          <button
+            onClick={handleSend}
+            disabled={disabled || !inputValue.trim()}
+            className="h-11 px-5 rounded-full bg-primary text-primary-foreground font-semibold text-sm transition-all active:scale-95 shrink-0 disabled:opacity-50"
+          >
+            {disabled ? "..." : "发送"}
           </button>
         )}
       </div>

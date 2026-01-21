@@ -37,10 +37,18 @@ export function ThoughtReport({
     >
       <div className="bg-background dark:bg-card rounded-2xl border border-border/40 shadow-sm overflow-hidden p-5">
         {/* Thinking Status */}
-        <div className="flex items-center justify-between mb-3 cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
+        <div
+          className="flex items-center justify-between mb-3 cursor-pointer"
+          onClick={() => setIsExpanded(!isExpanded)}
+        >
           <span className="text-sm font-medium text-muted-foreground flex items-center gap-0.5">
             {status === "completed" ? "已完成思考" : "深度思考中"}{" "}
-            <ChevronRight className={cn("size-4 transition-transform", isExpanded && "rotate-90")} />
+            <ChevronRight
+              className={cn(
+                "size-4 transition-transform",
+                isExpanded && "rotate-90",
+              )}
+            />
           </span>
         </div>
 
@@ -49,7 +57,9 @@ export function ThoughtReport({
           <div
             className={cn(
               "text-[15px] leading-relaxed text-muted-foreground overflow-hidden transition-all duration-500 ease-in-out break-words",
-              !isExpanded ? "max-h-0 opacity-0" : "max-h-[1000px] opacity-100 pb-2",
+              !isExpanded
+                ? "max-h-0 opacity-0"
+                : "max-h-[1000px] opacity-100 pb-2",
             )}
           >
             {thought}
@@ -62,8 +72,7 @@ export function ThoughtReport({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 className="absolute top-0 left-0 right-0 h-4 flex items-center"
-              >
-              </motion.div>
+              ></motion.div>
             )}
           </AnimatePresence>
         </div>
@@ -98,9 +107,7 @@ export function ThoughtReport({
                 ))}
               </div>
 
-              <button
-                className="p-2 rounded-xl text-muted-foreground hover:bg-muted transition-colors"
-              >
+              <button className="p-2 rounded-xl text-muted-foreground hover:bg-muted transition-colors">
                 <RotateCcw className="size-5" />
               </button>
             </div>
