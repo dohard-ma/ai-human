@@ -3,11 +3,15 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import OpenAI from "openai";
+import systemPrompts from "@/prompts/system";
 
 const openai = new OpenAI({
   apiKey: process.env.ARK_API_KEY,
   baseURL: "https://ark.cn-beijing.volces.com/api/v3",
 });
+
+// 默认系统提示词，可通过环境变量 SYSTEM_PROMPT 自定义
+const DEFAULT_SYSTEM_PROMPT = systemPrompts() || "你是人工智能助手";
 
 export async function sendMessage(content: string, conversationId?: string) {
   const session = await auth();
@@ -59,7 +63,7 @@ export async function sendMessage(content: string, conversationId?: string) {
 
   // 如果没有系统提示词，可以加一个
   if (!messages.some((m) => m.role === "system")) {
-    messages.unshift({ role: "system", content: "你是人工智能助手" });
+    messages.unshift({ role: "system", content: DEFAULT_SYSTEM_PROMPT });
   }
 
   // 4. 调用 AI 模型
@@ -149,7 +153,7 @@ export async function prepareConversation(
   }));
 
   if (!messages.some((m) => m.role === "system")) {
-    messages.unshift({ role: "system", content: "你是人工智能助手" });
+    messages.unshift({ role: "system", content: DEFAULT_SYSTEM_PROMPT });
   }
 
   return {

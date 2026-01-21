@@ -28,8 +28,8 @@ export async function POST(request: Request) {
     );
 
     // 调试：打印发送给 API 的消息
-    console.log("Messages sent to API:", JSON.stringify(messages, null, 2));
-    console.log("Model/Endpoint:", process.env.ARK_ENDPOINT_ID);
+    // console.log("Messages sent to API:", JSON.stringify(messages, null, 2));
+    // console.log("Model/Endpoint:", process.env.ARK_ENDPOINT_ID);
 
     // 创建流式响应
     const stream = await openai.chat.completions.create({
@@ -54,7 +54,6 @@ export async function POST(request: Request) {
           );
 
           for await (const chunk of stream) {
-            console.log("Chunk received:", JSON.stringify(chunk, null, 2));
             const delta = chunk.choices[0]?.delta;
 
             // 处理思考内容（如果模型支持）

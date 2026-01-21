@@ -13,10 +13,12 @@ import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
+export type State = "thinking" | "completed";
+
 interface ThoughtReportProps {
   thought: string;
   answer?: string;
-  status?: "thinking" | "completed";
+  status?: State
   className?: string;
 }
 
