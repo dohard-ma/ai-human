@@ -14,15 +14,45 @@ datasource db {
 }
 
 model User {
-  id            String         @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String?
-  email         String?        @unique
+  email         String?   @unique
   emailVerified DateTime?
   image         String?
+
+  // 多角色支持
+  roles UserRole[]
+
+  // 邀请关系追踪
+  invitedById  String?
+  invitedBy    User?   @relation("UserInvites", fields: [invitedById], references: [id])
+  invitedUsers User[]  @relation("UserInvites")
+
+  // 使用的邀请码追踪
+  usedInviteCodeId String?
+  usedInviteCode   InviteCode? @relation("UsedInviteCode", fields: [usedInviteCodeId], references: [id])
+
   conversations Conversation[]
+  inviteCodes   InviteCode[]   @relation("CreatedInviteCodes") // 我创建的邀请码 (作为邀请人)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Role {
+  id        String     @id @default(cuid())
+  name      String     @unique // "ADMIN", "USER", "INVITER"
+  canInvite Boolean    @default(false)
+  users     UserRole[]
+}
+
+model UserRole {
+  userId String
+  roleId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
 }
 
 model Conversation {
@@ -47,6 +77,34 @@ model Message {
   createdAt      DateTime     @default(now())
 
   @@index([conversationId])
+}
+
+// 邀请码表
+model InviteCode {
+  id        String    @id @default(cuid())
+  code      String    @unique // 邀请码，如 "BETA2026"
+  maxUses   Int       @default(1) // 默认一次性使用，也可设置多次
+  usedCount Int       @default(0) // 已使用次数
+  expiresAt DateTime? // 过期时间
+
+  creatorId String // 谁创建的这个邀请码
+  creator   User   @relation("CreatedInviteCodes", fields: [creatorId], references: [id])
+
+  usedByUsers User[] @relation("UsedInviteCode")
+
+  createdAt DateTime @default(now())
+}
+
+// 邮箱验证码表
+model EmailVerificationCode {
+  id        String   @id @default(cuid())
+  email     String
+  code      String // 4-6位验证码
+  expiresAt DateTime // ⏳ 10分钟后过期
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([email, code])
 }
 
 model VerificationToken {
