@@ -83,7 +83,8 @@ model Message {
 model InviteCode {
   id        String    @id @default(cuid())
   code      String    @unique // 邀请码，如 "BETA2026"
-  maxUses   Int       @default(1) // 默认一次性使用，也可设置多次
+  channel   String? // 渠道名称，如 "微信群", "知乎"
+  maxUses   Int       @default(100) // 默认多次使用
   usedCount Int       @default(0) // 已使用次数
   expiresAt DateTime? // 过期时间
 

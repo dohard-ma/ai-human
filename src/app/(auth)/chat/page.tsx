@@ -214,9 +214,7 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex h-dvh flex-col bg-background">
-      <ChatHeader />
-
+    <div className="flex h-full flex-col bg-[#0a0a0a]">
       <main className="flex-1 overflow-hidden relative">
         <ScrollArea className="h-full" ref={scrollRef}>
           <div

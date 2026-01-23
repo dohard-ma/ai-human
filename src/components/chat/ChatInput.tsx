@@ -1,10 +1,9 @@
 "use client";
 
-import {
-  Camera,
-} from "lucide-react";
+import { Camera, RotateCcw } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { motion } from "motion/react";
 
 export function ChatInput({
   onSend,
@@ -30,41 +29,54 @@ export function ChatInput({
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-xl border-t border-border/20 p-4 pb-10 space-y-4 max-w-2xl mx-auto">
-      {/* Input Main */}
-      <div className="flex items-center gap-3">
+    <div className="w-full max-w-3xl mx-auto px-4 py-6 bg-[#0a0a0a]">
+      <div className="relative flex items-center gap-2 bg-zinc-900/50 border border-zinc-800/50 rounded-2xl p-2 shadow-2xl backdrop-blur-md">
         {/* Left Camera */}
         <button
-          className="p-2 rounded-full hover:bg-secondary transition-colors shrink-0"
+          className="p-3 rounded-xl hover:bg-zinc-800 transition-colors shrink-0 group text-zinc-500 hover:text-white"
           aria-label="相机"
           disabled={disabled}
         >
-          <Camera className="size-7 text-foreground/70" />
+          <Camera className="size-6 transition-transform group-hover:scale-110" />
         </button>
 
         {/* Center Input Area */}
-        <div className="flex-1 relative flex items-center bg-secondary rounded-2xl px-1">
+        <div className="flex-1">
           <input
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={disabled ? "AI 正在思考..." : "发送消息..."}
+            placeholder={disabled ? "AI 正在思考..." : "沉浸式输入..."}
             disabled={disabled}
-            className="w-full h-12 bg-transparent border-none focus:ring-0 px-4 text-base text-foreground placeholder:text-foreground/30"
+            className="w-full h-11 bg-transparent border-none focus:outline-none focus:ring-0 px-2 text-[15px] text-zinc-100 placeholder:text-zinc-600"
           />
         </div>
 
         {/* Right Send Button */}
-        {(inputValue.length > 0 || disabled) && (
-          <button
-            onClick={handleSend}
-            disabled={disabled || !inputValue.trim()}
-            className="h-11 px-5 rounded-full bg-primary text-primary-foreground font-semibold text-sm transition-all active:scale-95 shrink-0 disabled:opacity-50"
-          >
-            {disabled ? "..." : "发送"}
-          </button>
-        )}
+        <button
+          onClick={handleSend}
+          disabled={disabled || !inputValue.trim()}
+          className={cn(
+            "size-11 flex items-center justify-center rounded-xl font-semibold transition-all shrink-0",
+            inputValue.trim() || disabled
+              ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20 active:scale-95"
+              : "bg-zinc-800/50 text-zinc-600 cursor-not-allowed",
+          )}
+        >
+          {disabled ? (
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            >
+              <RotateCcw className="size-5" />
+            </motion.div>
+          ) : (
+            <svg viewBox="0 0 24 24" className="size-5 fill-current">
+              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+            </svg>
+          )}
+        </button>
       </div>
     </div>
   );

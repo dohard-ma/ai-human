@@ -64,98 +64,111 @@ export function ThoughtReport({
   }, [thought]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-      className={cn("w-full mb-6", className)}
-    >
-      <div className="bg-background dark:bg-card rounded-2xl border border-border/40 shadow-sm overflow-hidden p-5">
+    <div className="group">
+      {/* Header Label */}
+      <div className="flex items-center gap-2 mb-2 px-1">
+        <div className="size-2 rounded-full bg-blue-500 animate-pulse" />
+        <span className="text-[10px] font-bold tracking-[0.2em] text-zinc-500 uppercase">
+          Socratic Probe
+        </span>
+      </div>
+
+      <div className="bg-zinc-900/40 border border-zinc-800/50 rounded-3xl overflow-hidden p-6 transition-all duration-300 hover:bg-zinc-900/60 shadow-2xl backdrop-blur-sm">
         {/* Thinking Status Header */}
         <div
-          className="flex items-center justify-between mb-3 cursor-pointer select-none"
+          className="flex items-center justify-between mb-4 cursor-pointer select-none group/header"
           onClick={toggleExpanded}
         >
-          <span className="text-sm font-medium text-muted-foreground flex items-center gap-0.5">
-            {status === "completed" ? "已完成思考" : "深度思考中"}{" "}
+          <span className="text-xs font-semibold text-zinc-400 flex items-center gap-1 group-hover/header:text-zinc-200 transition-colors">
+            {status === "completed"
+              ? "DIAGNOSTIC COMPLETE"
+              : "DEEP NEURAL SIFTING..."}{" "}
             <ChevronRight
               className={cn(
-                "size-4 transition-transform duration-200",
+                "size-3.5 transition-transform duration-300",
                 expanded && "rotate-90",
               )}
             />
           </span>
+          <div className="text-[9px] font-mono text-zinc-600 tracking-tighter">
+            BETA-CORE_V2.5
+          </div>
         </div>
 
-        {/* Thought Process - 默认展示固定高度 */}
+        {/* Thought Process */}
         <div className="relative">
           <div
             ref={thoughtRef}
             className={cn(
-              "text-[15px] leading-relaxed text-muted-foreground break-words transition-[max-height] duration-300 ease-in-out overflow-hidden",
-              expanded ? "max-h-[2000px]" : "max-h-[80px]",
+              "text-[14px] leading-relaxed text-zinc-400 font-medium break-words transition-[max-height] duration-500 ease-in-out overflow-hidden italic",
+              expanded ? "max-h-[2000px]" : "max-h-[60px]",
             )}
           >
-            {thought}
+            "{thought}"
           </div>
 
-          {/* 渐变遮罩和展开全部按钮 */}
           <AnimatePresence>
             {!expanded && needsExpand && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="absolute bottom-0 left-0 right-0 pt-8 bg-gradient-to-t from-background dark:from-card to-transparent"
+                className="absolute bottom-0 left-0 right-0 pt-8 bg-gradient-to-t from-zinc-900 via-zinc-900/80 to-transparent"
               >
                 <button
                   onClick={toggleExpanded}
-                  className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors py-1"
+                  className="w-full text-center text-[10px] font-bold text-zinc-500 hover:text-zinc-300 transition-colors py-1 uppercase tracking-widest"
                 >
-                  展开全部
+                  View Core Logic
                 </button>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
-        {/* Answer Section with Markdown */}
+        {/* Answer Section */}
         {answer && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="mt-2 pt-4 border-t border-dashed border-border"
+            className="mt-6 pt-6 border-t border-zinc-800/80"
           >
-            <div className="text-[17px] leading-relaxed text-foreground break-words">
+            <div className="text-[16px] leading-[1.6] text-zinc-100 font-medium break-words">
               <Markdown content={answer} />
             </div>
 
-            {/* Action Buttons */}
-            <div className="mt-6 flex items-center justify-between">
-              <div className="flex items-center gap-3">
+            {/* Action & Metadata Footer */}
+            <div className="mt-8 flex items-center justify-between">
+              <div className="flex items-center gap-1">
                 {[
                   { icon: Copy, label: "复制" },
-                  { icon: Volume2, label: "播放" },
-                  { icon: Bookmark, label: "收藏" },
                   { icon: Share2, label: "分享" },
+                  { icon: Bookmark, label: "收藏" },
+                  { icon: Volume2, label: "播放" },
                 ].map((action, i) => (
                   <button
                     key={i}
-                    className="p-2 rounded-xl text-primary hover:bg-primary/10 transition-colors"
+                    className="p-2.5 rounded-xl text-zinc-500 hover:text-white hover:bg-zinc-800 transition-all active:scale-90"
                     title={action.label}
                   >
-                    <action.icon className="size-5" />
+                    <action.icon className="size-4" />
                   </button>
                 ))}
               </div>
 
-              <button className="p-2 rounded-xl text-muted-foreground hover:bg-muted transition-colors">
-                <RotateCcw className="size-5" />
-              </button>
+              <div className="flex items-center gap-4">
+                <div className="text-[10px] font-mono text-blue-500/80 font-bold tracking-widest">
+                  ROI CALC: ACTIVE
+                </div>
+                <div className="text-[10px] font-mono text-zinc-600">10:03</div>
+                <button className="p-2.5 rounded-xl text-zinc-600 hover:text-white hover:bg-zinc-800 transition-all">
+                  <RotateCcw className="size-4" />
+                </button>
+              </div>
             </div>
           </motion.div>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 }
