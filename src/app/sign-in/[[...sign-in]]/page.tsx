@@ -91,7 +91,7 @@ export default function SignInPage() {
                 </CardDescription>
               </CardHeader>
               <form onSubmit={handleSendCode}>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-4 pb-2">
                   {error && (
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
@@ -217,7 +217,7 @@ export default function SignInPage() {
                 </CardDescription>
               </CardHeader>
               <form onSubmit={handleLogin}>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-4 pb-2">
                   {error && (
                     <div className="p-3 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-lg flex items-center gap-2">
                       <ShieldCheck className="size-4" />

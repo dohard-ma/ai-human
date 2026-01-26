@@ -36,7 +36,7 @@ export const viewport: Viewport = {
 const themeInitScript = `
 (() => {
   try {
-    const theme = localStorage.getItem("talent_flow_theme") || "dark";
+    const theme = localStorage.getItem("talent_flow_theme") || "light";
     const root = document.documentElement;
     if (theme === "dark") {
       root.classList.add("dark");
