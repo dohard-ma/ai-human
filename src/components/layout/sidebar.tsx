@@ -472,7 +472,7 @@ export function Sidebar({
               </button>
               <div className="h-px bg-border my-1" />
               <button
-                onClick={() => signOut({ callbackUrl: "/sign-in" })}
+                onClick={() => signOut({ callbackUrl: "/welcome" })}
                 className="w-full px-4 py-2.5 text-left text-xs text-destructive hover:bg-destructive/10 transition-colors flex items-center gap-2"
               >
                 <LogOut className="size-3.5" />
