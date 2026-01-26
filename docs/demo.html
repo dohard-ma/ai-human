@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>闫婷婷 - 天赋进化报告</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
+
+        :root {
+            --theme-color: rgb(6, 78, 59);
+            --theme-bg: rgb(6, 78, 59);
+            --theme-accent: rgb(52, 211, 153);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+
+        .theme-text {
+            color: var(--theme-color);
+        }
+
+        .theme-bg {
+            background-color: var(--theme-bg);
+        }
+
+        .theme-border {
+            border-color: var(--theme-color);
+        }
+
+        /* 模拟进场动画 */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .selection-emerald::selection {
+            background-color: rgb(6, 95, 70);
+            color: white;
+        }
+
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+
+        .gradient-border {
+            position: relative;
+            background: white;
+            border-radius: 2rem;
+            z-index: 0;
+        }
+
+        .gradient-border::before {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(45deg, var(--theme-color), var(--theme-accent), transparent);
+            border-radius: 2.1rem;
+            z-index: -1;
+            opacity: 0.2;
+        }
+    </style>
+</head>
+
+<body class="selection-emerald pt-12 pb-32">
+
+    <main class="max-w-2xl mx-auto px-6 space-y-10">
+
+        <!-- 1. 用户信息和天赋标签 -->
+        <section class="text-center pb-4 reveal">
+            <div
+                class="inline-block px-3 py-1 rounded-full bg-emerald-50 text-[rgb(6,95,70)] text-[10px] sm:text-[11px] font-bold tracking-widest uppercase mb-4 border border-emerald-100">
+                Talent Intelligence Profile
+            </div>
+            <h1 class="text-4xl sm:text-5xl font-black tracking-tighter text-slate-900 mb-3">闫婷婷</h1>
+            <p
+                class="theme-text text-sm sm:text-base font-bold uppercase tracking-[0.25em] sm:tracking-[0.3em] mb-8 underline decoration-2 underline-offset-8 decoration-emerald-100">
+                洞察型 × 韧性型
+            </p>
+
+            <div class="max-w-xs mx-auto mb-10">
+                <div class="flex items-center mb-3">
+                    <div class="size-2.5 rounded-full bg-[rgb(6,95,70)] shadow-[0_0_8px_rgba(6,95,70,0.5)]"></div>
+                    <div class="h-[2px] flex-1 bg-[rgb(6,95,70)]"></div>
+                    <div
+                        class="size-3.5 rounded-full bg-[rgb(6,95,70)] ring-4 ring-emerald-100 shadow-[0_0_12px_rgba(6,95,70,0.3)]">
+                    </div>
+                    <div class="h-[2px] flex-1 bg-slate-200"></div>
+                    <div class="size-2.5 rounded-full bg-slate-200"></div>
+                    <div class="h-[2px] flex-1 bg-slate-200"></div>
+                    <div class="size-2.5 rounded-full bg-slate-200"></div>
+                </div>
+                <div
+                    class="flex justify-between text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-tighter px-1">
+                    <span>萌芽期</span>
+                    <span class="theme-text">潜能期</span>
+                    <span>拥抱期</span>
+                    <span>通透期</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Nano Banana 总览主图 -->
+        <div
+            class="rounded-[2.5rem] overflow-hidden shadow-2xl shadow-emerald-900/10 border-4 border-white reveal relative group">
+            <div
+                class="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+            </div>
+            <img src="https://static.laohuoji.link/f23867f2-195c-491d-ab5c-ff38d7e21d95.jpg" alt="天赋进化总览图"
+                class="w-full h-auto block transform transition-transform duration-700 group-hover:scale-105"
+                onerror="this.src='https://via.placeholder.com/800x450?text=Talent+Overview+Visualization'" />
+            <div class="absolute bottom-4 right-6 text-white/70 text-[10px] font-mono tracking-tighter">ID:
+                YAN-2026-CORE</div>
+        </div>
+
+        <!-- 阶段诊断详情 -->
+        <section class="border rounded-[2rem] p-6 sm:p-8 md:p-10 shadow-sm bg-white border-slate-100 reveal">
+            <div class="mb-8">
+                <h2 class="text-2xl font-black tracking-tighter text-slate-900">阶段诊断：为何是潜能期？</h2>
+                <p class="text-[10px] uppercase tracking-[0.3em] mt-1 font-bold text-slate-400 italic">Stage Diagnosis
+                    Detail</p>
+            </div>
+            <div class="space-y-6">
+                <!-- 诊断依据 -->
+                <div class="p-5 rounded-2xl bg-slate-50 border border-slate-100">
+                    <h4
+                        class="text-xs sm:text-sm font-black text-slate-800 mb-3 flex items-center gap-2 tracking-tight">
+                        <i data-lucide="microscope" class="size-3.5 text-emerald-600"></i> 诊断依据
+                    </h4>
+                    <ul class="text-xs sm:text-sm text-slate-500 space-y-4 leading-relaxed font-light">
+                        <li class="flex gap-3 text-pretty">
+                            <span class="theme-text font-black shrink-0">01.</span>
+                            <span><strong class="text-slate-800">他人已见，自己未信：</strong>
+                                你的“人设”在朋友圈已是“想得明白”，说明天赋信号已外溢，只是你还没给它命名。</span>
+                        </li>
+                        <li class="flex gap-3 text-pretty">
+                            <span class="theme-text font-black shrink-0">02.</span>
+                            <span><strong class="text-slate-800">未掌控的不稳定性：</strong>
+                                对很多表现回答“不记得”，说明洞察力目前还是“本能直觉”，尚未内化为“可控技能”。</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 迈向下一阶段建议 (补全内容) -->
+                <div
+                    class="p-6 rounded-2xl theme-bg text-white shadow-xl shadow-emerald-900/20 relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h4
+                            class="text-xs sm:text-sm font-black mb-3 flex items-center gap-2 tracking-tight text-emerald-300">
+                            <i data-lucide="zap" class="size-3.5 fill-emerald-300"></i>迈向下一阶段建议
+                        </h4>
+                        <p class="text-xs sm:text-sm leading-relaxed opacity-90 font-light text-pretty">
+                            <strong class="text-white font-bold">收集证据：</strong>
+                            你现在不需要去学任何新技能，而是要像侦探一样，收集自己“帮人看破本质”的真实证据。只有通过确凿的案例，才能把“无意识的本能”转化为“有意识的自信”。
+                        </p>
+                    </div>
+                    <i data-lucide="trending-up"
+                        class="absolute -right-4 -bottom-4 size-24 text-white/5 -rotate-12"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. 核心天赋识别 -->
+        <section class="border rounded-[2rem] p-6 sm:p-8 md:p-10 shadow-sm bg-white border-slate-100 reveal">
+            <div class="mb-8">
+                <h2 class="text-2xl font-black tracking-tighter text-slate-900">核心天赋识别</h2>
+                <p class="text-[10px] uppercase tracking-[0.3em] mt-1 font-bold text-slate-400">Core Identification</p>
+            </div>
+            <div class="space-y-6">
+                <!-- Talent 1 -->
+                <div class="flex gap-4 sm:gap-6 relative">
+                    <div class="flex flex-col items-center">
+                        <div
+                            class="size-10 rounded-full theme-bg text-white flex shrink-0 items-center justify-center font-bold text-sm shadow-lg z-10">
+                            洞</div>
+                        <div class="w-px h-full bg-slate-100 absolute top-10"></div>
+                    </div>
+                    <div class="flex flex-col gap-3">
+                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                            <h3 class="text-base sm:text-lg font-black text-slate-900 tracking-tight">1. 主天赋：洞察型</h3>
+                            <span
+                                class="text-[11px] sm:text-xs font-mono font-bold theme-text bg-emerald-50 px-2 py-1 rounded tabular-nums tracking-tighter border border-emerald-100">强度
+                                7/10</span>
+                        </div>
+                        <div
+                            class="text-sm sm:text-base text-slate-600 leading-relaxed font-light text-pretty space-y-2">
+                            <p>能看透事物本质，在别人困难时提供清晰视角。不是靠信息量取胜，而是靠“看问题的角度”。
+                            </p>
+                            <div class="space-y-2 mt-1">
+                                <div
+                                    class="flex gap-2 text-[11px] sm:text-xs text-slate-400 italic bg-slate-50 p-3 rounded-xl border border-slate-100/50">
+                                    <i data-lucide="quote" class="size-3 shrink-0 opacity-20"></i>
+                                    <p class="text-pretty">“别人看不破的时候找我，可能我想得明白也看得明白吧。”</p>
+                                </div>
+                                <div
+                                    class="flex gap-2 text-[11px] sm:text-xs text-slate-400 italic bg-slate-50 p-3 rounded-xl border border-slate-100/50">
+                                    <i data-lucide="quote" class="size-3 shrink-0 opacity-20"></i>
+                                    <p class="text-pretty">“人设是：想得明白、洞察力。”</p>
+                                </div>
+                            </div>
+                            <p><strong class="text-slate-800">为什么是7分：</strong>别人已经认可，但你自己还没完全接受。当你开始有意识地使用这个天赋时，强度会迅速提升。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Talent 2 -->
+                <div class="flex gap-4 sm:gap-6 relative">
+                    <div class="flex flex-col items-center">
+                        <div
+                            class="size-10 rounded-full theme-bg text-white flex shrink-0 items-center justify-center font-bold text-sm shadow-lg z-10">
+                            韧</div>
+                        <div class="w-px h-full bg-slate-100 absolute top-10"></div>
+                    </div>
+                    <div class="flex flex-col gap-3">
+                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                            <h3 class="text-base sm:text-lg font-black text-slate-900 tracking-tight">2. 辅助天赋：韧性型（坚持/执行）
+                            </h3>
+                            <span
+                                class="text-[11px] sm:text-xs font-mono font-bold theme-text bg-emerald-50 px-2 py-1 rounded tabular-nums tracking-tighter border border-emerald-100">强度
+                                6/10</span>
+                        </div>
+                        <div
+                            class="text-sm sm:text-base text-slate-600 leading-relaxed font-light text-pretty space-y-2">
+                            <p>认定的事就会一直做下去，说到做到，不轻易放弃。</p>
+                            <div class="space-y-2 mt-1">
+                                <div
+                                    class="flex gap-2 text-[11px] sm:text-xs text-slate-400 italic bg-slate-50 p-3 rounded-xl border border-slate-100/50">
+                                    <i data-lucide="quote" class="size-3 shrink-0 opacity-20"></i>
+                                    <p class="text-pretty">“认定的事会一直做”（问题18）</p>
+                                </div>
+                                <div
+                                    class="flex gap-2 text-[11px] sm:text-xs text-slate-400 italic bg-slate-50 p-3 rounded-xl border border-slate-100/50">
+                                    <i data-lucide="quote" class="size-3 shrink-0 opacity-20"></i>
+                                    <p class="text-pretty">“说做什么就做什么”（问题8）</p>
+                                </div>
+                                <div
+                                    class="flex gap-2 text-[11px] sm:text-xs text-slate-400 italic bg-slate-50 p-3 rounded-xl border border-slate-100/50">
+                                    <i data-lucide="quote" class="size-3 shrink-0 opacity-20"></i>
+                                    <p class="text-pretty">“考驾照每一科都一把过”（问题3）—这需要持续的专注和执行力</p>
+                                </div>
+                            </div>
+                            <p><strong class="text-slate-800">为什么是6分：</strong>有明确信号，但目前更多体现在「完成任务」层面，还没有用在更大的目标上。</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Talent 3 -->
+                <div class="flex gap-4 sm:gap-6 relative">
+                    <div class="flex flex-col items-center">
+                        <div
+                            class="size-10 rounded-full theme-bg text-white flex shrink-0 items-center justify-center font-bold text-sm shadow-lg z-10">
+                            学</div>
+                        <div class="w-px h-full bg-slate-100 absolute top-10"></div>
+                    </div>
+                    <div class="flex flex-col gap-3">
+                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                            <h3 class="text-base sm:text-lg font-black text-slate-900 tracking-tight">3. 潜在天赋（待验证）：学习型
+                            </h3>
+                            <span
+                                class="text-[11px] sm:text-xs font-mono font-bold theme-text bg-emerald-50 px-2 py-1 rounded tabular-nums tracking-tighter border border-emerald-100">待验证</span>
+                        </div>
+                        <div
+                            class="text-sm sm:text-base text-slate-600 leading-relaxed font-light text-pretty space-y-2">
+                            <p>享受从未知到掌握的过程，学习速度快于常人。</p>
+                            <div class="space-y-2 mt-1">
+                                <div
+                                    class="flex gap-2 text-[11px] sm:text-xs text-slate-400 italic bg-slate-50 p-3 rounded-xl border border-slate-100/50">
+                                    <i data-lucide="quote" class="size-3 shrink-0 opacity-20"></i>
+                                    <p class="text-pretty">“只要不是难的技术类，上手都比较快”（问题10）</p>
+                                </div>
+                                <div
+                                    class="flex gap-2 text-[11px] sm:text-xs text-slate-400 italic bg-slate-50 p-3 rounded-xl border border-slate-100/50">
+                                    <i data-lucide="quote" class="size-3 shrink-0 opacity-20"></i>
+                                    <p class="text-pretty">“最舍得花钱学英语”（问题12）</p>
+                                </div>
+                            </div>
+                            <p><strong
+                                    class="text-slate-800">为什么是「待验证」：</strong>你说“努力也赶不上的领域是学习”（问题17），这和上面的线索有矛盾。我的判断是——你不擅长的可能是「应试型学习」，而不是「真正的学习」。建议在感兴趣的领域验证一下。
+                            </p>
+                            <p><strong
+                                    class="text-slate-800">验证建议：</strong>挑一个你真正好奇的领域（比如玄学、心理学、某个你感兴趣的技能），看看自己的学习速度和投入状态。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. 天赋组合分析 -->
+        <section class="border rounded-[2rem] p-6 sm:p-8 md:p-10 shadow-sm bg-white border-slate-100 reveal">
+            <div class="mb-8">
+                <h2 class="text-2xl font-black tracking-tighter text-balance text-slate-900">天赋组合分析</h2>
+                <p class="text-[10px] uppercase tracking-[0.3em] mt-1 font-bold text-slate-400">Synergy Analysis</p>
+            </div>
+            <div class="space-y-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">组合特质 / Synergy</p>
+                    <p class="text-lg font-bold theme-text leading-tight text-pretty tracking-tight">
+                        你是 <span
+                            class="underline decoration-yellow-400 decoration-4 underline-offset-4">「幕后军师」与「苦行僧」</span>
+                        的结合体。
+                    </p>
+                    <p class="text-sm sm:text-base text-slate-500 mt-4 leading-relaxed text-pretty font-light">
+                        大多数人要么想得好但做不到，要么做得苦 but 想不通。你兼具了“想得透”和“做到底”的特质。
+                    </p>
+                </div>
+
+                <!-- 推荐角色及本质原因 -->
+                <div class="space-y-4">
+                    <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest px-2">推荐角色定位</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-5 rounded-2xl bg-emerald-50/30 border border-emerald-100">
+                            <p class="text-[10px] font-bold theme-text mb-2 tracking-widest uppercase">核心逻辑</p>
+                            <p class="text-sm font-black text-slate-800 mb-2">独立判断 + 独立执行</p>
+                            <p class="text-[11px] text-slate-500 leading-relaxed">适合：独立研究者、深度分析师、内容创作者。</p>
+                        </div>
+                        <div class="p-5 rounded-2xl bg-emerald-50/30 border border-emerald-100">
+                            <p class="text-[10px] font-bold theme-text mb-2 tracking-widest uppercase">环境偏好</p>
+                            <p class="text-sm font-black text-slate-800 mb-2">幕后策略 > 台前社交</p>
+                            <p class="text-[11px] text-slate-500 leading-relaxed">适合：策略顾问、幕僚型角色、技能型专家。</p>
+                        </div>
+                    </div>
+                    <div class="px-5 py-3 bg-slate-900 text-white rounded-xl text-[10px] leading-relaxed">
+                        <span class="text-yellow-400 font-bold mr-1">💡 为什么？</span>
+                        你的天赋需要“先想清楚再行动”，你更适合在安静的环境中持续深耕，而不是在频繁的社交中消耗能量。
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="flex gap-4 items-start p-2">
+                        <div
+                            class="size-8 rounded-lg theme-bg text-white flex shrink-0 items-center justify-center font-bold text-xs shadow-sm">
+                            职</div>
+                        <div>
+                            <h4 class="font-bold text-sm tracking-tight text-slate-900">推荐角色</h4>
+                            <p class="text-xs sm:text-sm text-slate-500 mt-1 leading-relaxed text-pretty font-light">
+                                独立研究者、深度内容创作者、策略顾问。</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 items-start p-2">
+                        <div
+                            class="size-8 rounded-lg bg-red-100 text-red-600 flex shrink-0 items-center justify-center font-bold text-xs shadow-sm">
+                            盲</div>
+                        <div>
+                            <h4 class="font-bold text-sm text-red-600 tracking-tight">潜在盲点</h4>
+                            <p class="text-xs sm:text-sm text-slate-500 mt-1 leading-relaxed text-pretty font-light">
+                                社交黑洞：跟陌生人打交道会迅速耗干你的洞察力，警惕“表演热情”。</p>
+                            <p class="text-xs sm:text-sm text-slate-500 mt-1 leading-relaxed text-pretty font-light">
+                                自我透明：容易低估自己想明白的能力，觉得“这不算什么”。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. 比较优势定位 -->
+        <section class="border rounded-[2rem] p-6 sm:p-8 md:p-10 shadow-sm bg-white border-slate-100 reveal">
+            <div class="mb-8 text-center">
+                <h2 class="text-2xl font-black tracking-tighter text-slate-900">比较优势定位</h2>
+                <p class="text-[10px] uppercase tracking-[0.3em] mt-1 font-bold text-slate-400">Competitive Edge</p>
+            </div>
+
+            <div class="overflow-hidden border border-slate-100 rounded-2xl mb-8">
+                <div
+                    class="grid grid-cols-3 bg-slate-50 p-3 sm:p-4 text-[10px] sm:text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">
+                    <div>能力维度</div>
+                    <div>类型</div>
+                    <div>判断依据</div>
+                </div>
+                <div class="divide-y divide-slate-50 text-[11px] sm:text-xs">
+                    <div class="grid grid-cols-3 p-3 sm:p-4 items-center">
+                        <div class="font-bold theme-text">想得明白</div>
+                        <div class="text-slate-400">天赋</div>
+                        <div class="text-slate-500 italic font-light">别人主动找你，且你觉得自然</div>
+                    </div>
+                    <div class="grid grid-cols-3 p-3 sm:p-4 items-center">
+                        <div class="font-bold text-slate-700">说到做到</div>
+                        <div class="text-slate-400">天赋</div>
+                        <div class="text-slate-500 italic font-light">这是你的人设，不仅是偶尔的行为</div>
+                    </div>
+                    <div class="grid grid-cols-3 p-3 sm:p-4 items-center">
+                        <div class="font-bold text-slate-700">非技术学习</div>
+                        <div class="text-slate-400">优势</div>
+                        <div class="text-slate-500 italic font-light">你愿意投入金钱和时间，且上手快</div>
+                    </div>
+                    <div class="grid grid-cols-3 p-3 sm:p-4 items-center">
+                        <div class="font-bold text-red-400">销售表演</div>
+                        <div class="text-slate-400">避坑</div>
+                        <div class="text-slate-500 italic font-light">明确的能量黑洞，需避开</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-emerald-50 text-center">
+                <p class="text-[10px] font-bold text-emerald-800 uppercase tracking-[0.2em] mb-3">Who I Am Better Than
+                </p>
+                <p class="text-sm sm:text-base font-medium text-slate-600 leading-relaxed">
+                    你不需要成为最老练的专家，你只需成为那个 <br />
+                    <span class="text-lg font-black theme-text">“比对方想得更清楚、更透彻的人”</span>。
+                </p>
+            </div>
+        </section>
+
+        <!-- 7. 场景适配矩阵 -->
+        <section class="border rounded-[2rem] p-6 sm:p-8 md:p-10 shadow-sm bg-white border-slate-100 reveal">
+            <div class="mb-8">
+                <h2 class="text-2xl font-black tracking-tighter text-balance text-slate-900">场景适配矩阵</h2>
+                <p class="text-[10px] uppercase tracking-[0.3em] mt-1 font-bold text-slate-400">Scenario Matrix</p>
+            </div>
+            <div class="space-y-4">
+                <div
+                    class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 rounded-2xl border-2 theme-border bg-emerald-50/20 transition-all shadow-sm gap-3">
+                    <div class="flex items-center gap-4">
+                        <div class="size-10 rounded-xl theme-bg text-white flex items-center justify-center font-black">
+                            A</div>
+                        <div class="text-sm sm:text-base font-black theme-text tracking-tight">独立分析 / 策略研究</div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="flex gap-0.5 text-emerald-600">
+                            <i data-lucide="star" class="size-3 fill-emerald-600"></i>
+                            <i data-lucide="star" class="size-3 fill-emerald-600"></i>
+                            <i data-lucide="star" class="size-3 fill-emerald-600"></i>
+                            <i data-lucide="star" class="size-3 fill-emerald-600"></i>
+                            <i data-lucide="star" class="size-3 fill-emerald-600"></i>
+                        </div>
+                        <span
+                            class="bg-emerald-600 text-white text-[9px] px-2 py-1 rounded-sm font-black uppercase tracking-tighter">立即启动</span>
+                    </div>
+                </div>
+
+                <div
+                    class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 rounded-2xl border border-slate-100 bg-white shadow-sm gap-3">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="size-10 rounded-xl bg-slate-200 text-slate-600 flex items-center justify-center font-black">
+                            B</div>
+                        <div class="text-sm sm:text-base font-black text-slate-700 tracking-tight text-pretty">深度阅读 /
+                            记录思考</div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="flex gap-0.5 text-slate-400">
+                            <i data-lucide="star" class="size-3 fill-slate-400"></i>
+                            <i data-lucide="star" class="size-3 fill-slate-400"></i>
+                            <i data-lucide="star" class="size-3 fill-slate-400"></i>
+                            <i data-lucide="star" class="size-3 fill-slate-400"></i>
+                            <i data-lucide="star" class="size-3 fill-slate-400"></i>
+                        </div>
+                        <span
+                            class="bg-slate-400 text-white text-[9px] px-2 py-1 rounded-sm font-black uppercase tracking-tighter">继续保持</span>
+                    </div>
+                </div>
+
+                <div
+                    class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 rounded-xl border border-slate-100 opacity-40 grayscale gap-3">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="size-10 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center font-black">
+                            D</div>
+                        <div class="text-sm sm:text-base font-black text-slate-400 tracking-tight">广泛社交 / 销售表演</div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="flex gap-0.5 text-slate-300">
+                            <i data-lucide="star" class="size-3 fill-slate-300"></i>
+                        </div>
+                        <span
+                            class="bg-slate-300 text-white text-[9px] px-2 py-1 rounded-sm font-black uppercase tracking-tighter">不推荐</span>
+                    </div>
+                </div>
+
+                <div class="mt-10 space-y-6">
+                    <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100/50">
+                        <h3
+                            class="font-black text-sm sm:text-base mb-3 flex items-center gap-2 text-slate-800 tracking-tight">
+                            <span class="size-2 rounded-full theme-bg"></span> 场景 1：写作与记录思考
+                        </h3>
+                        <p class="text-xs sm:text-sm text-slate-500 leading-relaxed font-light text-pretty">
+                            文字是你最舒服的表达方式，且能固化你的洞察。从“帮自己想清楚”开始写笔记。比如：“今天我观察到了什么人性规律？”如果不记录，你的洞察天赋就会像水一样流走。
+                        </p>
+                    </div>
+                    <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100/50">
+                        <h3
+                            class="font-black text-sm sm:text-base mb-3 flex items-center gap-2 text-slate-800 tracking-tight">
+                            <span class="size-2 rounded-full theme-bg"></span> 场景 2：朋友圈里的“解惑者”
+                        </h3>
+                        <p class="text-xs sm:text-sm text-slate-500 leading-relaxed font-light text-pretty">
+                            既然别人已经因为“看不破”找你了，这就是你天赋的自然出口。当朋友来找你聊的时候，有意识地复盘：我是怎么帮她把乱麻理顺的？ 这种经验积累多了，未来就是咨询师的雏形。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. 进化路径与行动 -->
+        <section
+            class="theme-bg rounded-[2.5rem] p-6 sm:p-8 md:p-10 text-white shadow-2xl shadow-emerald-900/40 reveal overflow-hidden relative">
+            <div class="relative z-10">
+                <div class="mb-10">
+                    <h2 class="text-2xl sm:text-3xl font-black tracking-tighter mb-1">进化路径与行动</h2>
+                    <p class="text-[10px] uppercase tracking-[0.3em] font-bold text-emerald-300">Action Roadmap</p>
+                </div>
+
+                <div class="mb-12">
+                    <h4
+                        class="text-[10px] font-black uppercase tracking-widest text-emerald-400 mb-6 border-b border-white/10 pb-2">
+                        本周行动 (7 Days Plan)</h4>
+                    <div class="space-y-6">
+                        <div class="flex gap-4">
+                            <div
+                                class="size-6 rounded bg-white text-[rgb(6,78,59)] flex shrink-0 items-center justify-center text-[10px] font-black">
+                                1</div>
+                            <p class="text-xs sm:text-sm text-emerald-50/80 font-light leading-relaxed"><strong
+                                    class="text-white">案例收集：</strong> 写下3个“我帮别人想清楚”的过往案例。</p>
+                        </div>
+                        <div class="flex gap-4">
+                            <div
+                                class="size-6 rounded bg-white text-[rgb(6,78,59)] flex shrink-0 items-center justify-center text-[10px] font-black">
+                                2</div>
+                            <p class="text-xs sm:text-sm text-emerald-50/80 font-light leading-relaxed"><strong
+                                    class="text-white">外部反馈：</strong> 问一个朋友：“你觉得我哪方面看得明白？”</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h4
+                        class="text-[10px] font-black uppercase tracking-widest text-emerald-400 mb-6 border-b border-white/10 pb-2">
+                        90天计划 (90 Days Roadmap)</h4>
+                    <div class="space-y-8 relative">
+                        <div class="absolute left-3 top-2 bottom-2 w-px bg-white/20"></div>
+                        <div class="relative pl-10">
+                            <div
+                                class="absolute left-3 top-1 size-2 rounded-full bg-emerald-400 -translate-x-1/2 ring-4 ring-emerald-400/20">
+                            </div>
+                            <h5 class="text-[10px] font-black text-emerald-200 mb-1">M1: 证据确认</h5>
+                            <p class="text-[11px] sm:text-xs text-white/60 font-light">建立“洞察力”心理认同。</p>
+                        </div>
+                        <div class="relative pl-10">
+                            <div class="absolute left-3 top-1 size-2 rounded-full bg-white/30 -translate-x-1/2"></div>
+                            <h5 class="text-[10px] font-black text-white mb-1">M2: 刻意输出</h5>
+                            <p class="text-[11px] sm:text-xs text-white/60 font-light">通过文字固化洞察，展示你的观点。</p>
+                        </div>
+                        <div class="relative pl-10">
+                            <div class="absolute left-3 top-1 size-2 rounded-full bg-white/30 -translate-x-1/2"></div>
+                            <h5 class="text-[10px] font-black text-white mb-1">M3: 影响力闭环</h5>
+                            <p class="text-[11px] sm:text-xs text-white/60 font-light">帮3-5个朋友解决困惑，验证分析能力。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <i data-lucide="zap" class="absolute -right-8 -top-8 size-48 text-white/5 rotate-12"></i>
+        </section>
+
+        <!-- 9. 成长建议 -->
+        <section class="border rounded-[2rem] p-6 sm:p-8 md:p-10 shadow-sm bg-white border-slate-100 reveal">
+            <div class="mb-8">
+                <h2 class="text-2xl font-black tracking-tighter text-balance text-slate-900">成长建议</h2>
+                <p class="text-[10px] uppercase tracking-[0.3em] mt-1 font-bold text-slate-400">Growth Suggestions</p>
+            </div>
+
+            <div class="space-y-4 text-pretty mb-12">
+                <div
+                    class="p-6 rounded-2xl border border-slate-100 flex gap-4 bg-white hover:border-emerald-200 transition-colors shadow-sm">
+                    <i data-lucide="shield-check" class="size-5 theme-text shrink-0"></i>
+                    <div>
+                        <p class="text-sm font-bold text-slate-800 tracking-tight">警惕“这不算什么”综合征</p>
+                        <p class="text-xs sm:text-sm text-slate-500 mt-1 leading-relaxed text-pretty font-light">
+                            你觉得想得明白是正常的事，但请相信，这对大多数人来说是非常难的。不要低估你的核心竞争力。
+                        </p>
+                    </div>
+                </div>
+                <div
+                    class="p-6 rounded-2xl border border-slate-100 flex gap-4 bg-white hover:border-red-100 transition-colors shadow-sm">
+                    <i data-lucide="users" class="size-5 text-red-500 shrink-0"></i>
+                    <div>
+                        <p class="text-sm font-bold text-slate-800 tracking-tight text-pretty">远离“表演热情”的场合</p>
+                        <p class="text-xs sm:text-sm text-slate-500 mt-1 leading-relaxed text-pretty font-light">
+                            需要大量社交、逼你表演热情的环境会迅速耗干你的电量。在孤独中思考，在静默中爆发。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 金句样式 -->
+            <div class="mt-16 relative">
+                <div class="absolute inset-0 bg-emerald-50/50 rounded-[3rem] -rotate-1 scale-105"></div>
+                <div
+                    class="relative z-10 p-6 sm:p-8 md:p-14 bg-white rounded-[3rem] border border-emerald-100 shadow-xl shadow-emerald-900/5 text-center overflow-hidden">
+                    <i data-lucide="quote" class="absolute -top-4 -left-4 size-32 text-emerald-600/5 rotate-12"></i>
+                    <i data-lucide="quote"
+                        class="absolute -bottom-4 -right-4 size-32 text-emerald-600/5 -rotate-12"></i>
+
+                    <blockquote
+                        class="text-xl sm:text-2xl md:text-3xl font-black theme-text leading-tight italic text-balance mb-6 sm:mb-8 relative">
+                        “你不需要表演热情，<br />
+                        你只需在别人迷茫时，<br />
+                        说出你看到的真相。”
+                    </blockquote>
+
+                    <div class="flex flex-col items-center">
+                        <div class="h-[2px] w-8 theme-bg mb-4 opacity-20"></div>
+                        <p
+                            class="text-[11px] sm:text-xs text-slate-400 font-bold uppercase tracking-[0.3em] sm:tracking-[0.4em]">
+                            閆婷婷 · 幕后军师</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center pt-8 pb-16">
+            <p class="text-[10px] text-slate-300 uppercase tracking-[0.4em] font-bold">
+                Talent Intelligence Report © 2026
+            </p>
+        </footer>
+
+    </main>
+
+    <!-- 底部悬浮按钮 -->
+    <div
+        class="fixed bottom-0 left-0 right-0 p-4 sm:p-6 z-50 bg-linear-to-t from-[#f8fafc] via-[#f8fafc]/90 to-transparent">
+        <div class="max-w-2xl mx-auto">
+            <button
+                class="w-full py-4 sm:py-5 theme-bg text-white rounded-2xl font-black text-xs sm:text-sm shadow-2xl shadow-emerald-900/40 tracking-[0.18em] sm:tracking-[0.2em] uppercase flex items-center justify-center gap-3 active:scale-95 transition-transform">
+                <i data-lucide="share-2" class="size-4"></i>
+                保存并分享我的天赋卡片
+            </button>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+</body>
+
+</html>

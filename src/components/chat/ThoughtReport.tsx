@@ -27,7 +27,7 @@ interface ThoughtReportProps {
 }
 
 // 固定展示高度（单位: px）
-const COLLAPSED_HEIGHT = 80;
+const COLLAPSED_HEIGHT = 60;
 
 export function ThoughtReport({
   thought,
@@ -64,106 +64,107 @@ export function ThoughtReport({
   }, [thought]);
 
   return (
-    <div className="group">
-      {/* Header Label */}
-      <div className="flex items-center gap-2 mb-2 px-1">
-        <div className="size-2 rounded-full bg-blue-500 animate-pulse" />
-        <span className="text-[10px] font-bold tracking-[0.2em] text-zinc-500 uppercase">
-          Socratic Probe
-        </span>
+    <div className={cn("ai-message-container", className)}>
+      {/* AI Avatar */}
+      <div className="ai-avatar-wrapper">
+        <div className="size-8 rounded-lg bg-emerald-900 dark:bg-emerald-600 flex items-center justify-center text-white">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+            <path d="M19 3v4" />
+            <path d="M21 5h-4" />
+          </svg>
+        </div>
       </div>
 
-      <div className="bg-zinc-900/40 border border-zinc-800/50 rounded-3xl overflow-hidden p-6 transition-all duration-300 hover:bg-zinc-900/60 shadow-2xl backdrop-blur-sm">
-        {/* Thinking Status Header */}
-        <div
-          className="flex items-center justify-between mb-4 cursor-pointer select-none group/header"
-          onClick={toggleExpanded}
-        >
-          <span className="text-xs font-semibold text-zinc-400 flex items-center gap-1 group-hover/header:text-zinc-200 transition-colors">
-            {status === "completed"
-              ? "DIAGNOSTIC COMPLETE"
-              : "DEEP NEURAL SIFTING..."}{" "}
+      {/* Content */}
+      <div className="flex-1 space-y-4 min-w-0">
+        {/* Thinking Process (Collapsible) */}
+        <details className="group/think" open={expanded}>
+          <summary
+            onClick={(e) => {
+              e.preventDefault();
+              toggleExpanded();
+            }}
+            className="text-xs font-medium text-muted-foreground cursor-pointer list-none flex items-center gap-1.5 hover:text-foreground transition-colors select-none"
+          >
             <ChevronRight
               className={cn(
-                "size-3.5 transition-transform duration-300",
+                "size-3 transition-transform",
                 expanded && "rotate-90",
               )}
+              strokeWidth={3}
             />
-          </span>
-          <div className="text-[9px] font-mono text-zinc-600 tracking-tighter">
-            BETA-CORE_V2.5
-          </div>
-        </div>
-
-        {/* Thought Process */}
-        <div className="relative">
+            <span>{status === "thinking" ? "正在思考" : "思考过程"}</span>
+            {status === "thinking" && (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="size-3.5 ml-0.5 animate-spin"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M12 2v4" />
+                <path d="m16.2 4.2 2.8 2.8" />
+                <path d="M18 12h4" />
+                <path d="m16.2 19.8 2.8-2.8" />
+                <path d="M12 18v4" />
+                <path d="m4.8 19.8 2.8-2.8" />
+                <path d="M2 12h4" />
+                <path d="m4.8 4.2 2.8 2.8" />
+              </svg>
+            )}
+          </summary>
           <div
             ref={thoughtRef}
             className={cn(
-              "text-[14px] leading-relaxed text-zinc-400 font-medium break-words transition-[max-height] duration-500 ease-in-out overflow-hidden italic",
-              expanded ? "max-h-[2000px]" : "max-h-[60px]",
+              "mt-2 pl-3 border-l-2 border-border text-xs leading-relaxed text-muted-foreground transition-[max-height] duration-500 ease-in-out overflow-hidden text-pretty",
+              expanded ? "max-h-[2000px]" : "max-h-[60px] line-clamp-3",
             )}
           >
-            "{thought}"
+            {thought}
           </div>
-
-          <AnimatePresence>
-            {!expanded && needsExpand && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="absolute bottom-0 left-0 right-0 pt-8 bg-gradient-to-t from-zinc-900 via-zinc-900/80 to-transparent"
-              >
-                <button
-                  onClick={toggleExpanded}
-                  className="w-full text-center text-[10px] font-bold text-zinc-500 hover:text-zinc-300 transition-colors py-1 uppercase tracking-widest"
-                >
-                  View Core Logic
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+        </details>
 
         {/* Answer Section */}
         {answer && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="mt-6 pt-6 border-t border-zinc-800/80"
+            className="bg-muted p-4 rounded-2xl border border-border shadow-sm"
           >
-            <div className="text-[16px] leading-[1.6] text-zinc-100 font-medium break-words">
+            <div className="text-[15px] leading-relaxed text-pretty">
               <Markdown content={answer} />
             </div>
 
             {/* Action & Metadata Footer */}
-            <div className="mt-8 flex items-center justify-between">
+            <div className="mt-4 flex items-center justify-between">
               <div className="flex items-center gap-1">
                 {[
                   { icon: Copy, label: "复制" },
                   { icon: Share2, label: "分享" },
-                  { icon: Bookmark, label: "收藏" },
-                  { icon: Volume2, label: "播放" },
+                  // { icon: Bookmark, label: "收藏" },
+                  // { icon: Volume2, label: "播放" },
                 ].map((action, i) => (
                   <button
                     key={i}
-                    className="p-2.5 rounded-xl text-zinc-500 hover:text-white hover:bg-zinc-800 transition-all active:scale-90"
+                    className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-accent transition-all active:scale-90"
                     title={action.label}
                   >
                     <action.icon className="size-4" />
                   </button>
                 ))}
-              </div>
-
-              <div className="flex items-center gap-4">
-                <div className="text-[10px] font-mono text-blue-500/80 font-bold tracking-widest">
-                  ROI CALC: ACTIVE
-                </div>
-                <div className="text-[10px] font-mono text-zinc-600">10:03</div>
-                <button className="p-2.5 rounded-xl text-zinc-600 hover:text-white hover:bg-zinc-800 transition-all">
-                  <RotateCcw className="size-4" />
-                </button>
               </div>
             </div>
           </motion.div>

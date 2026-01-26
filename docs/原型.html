@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Talent Flow - 宁静成长</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        border: "var(--border)",
+                        background: "var(--background)",
+                        foreground: "var(--foreground)",
+                        primary: {
+                            DEFAULT: "var(--primary)",
+                            foreground: "var(--primary-foreground)",
+                        },
+                        muted: {
+                            DEFAULT: "var(--muted)",
+                            foreground: "var(--muted-foreground)",
+                        },
+                        accent: {
+                            DEFAULT: "var(--accent)",
+                            foreground: "var(--accent-foreground)",
+                        },
+                        card: "var(--card)",
+                    },
+                    borderRadius: {
+                        lg: "8px",
+                        xl: "12px",
+                        "2xl": "16px",
+                        "3xl": "24px",
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --background: hsl(140, 20%, 98%);
+            --foreground: hsl(160, 30%, 15%);
+            --border: hsl(140, 15%, 90%);
+            --primary: hsl(155, 40%, 25%);
+            --primary-foreground: hsl(155, 40%, 98%);
+            --muted: hsl(140, 10%, 90%);
+            --muted-foreground: hsl(140, 10%, 45%);
+            --accent: hsl(155, 30%, 94%);
+            --accent-foreground: hsl(155, 40%, 25%);
+            --card: hsl(140, 20%, 100%);
+            --sidebar: #f3f5f3;
+        }
+
+        .dark {
+            --background: hsl(160, 25%, 6%);
+            --foreground: hsl(160, 10%, 90%);
+            --border: hsl(160, 15%, 15%);
+            --primary: hsl(155, 50%, 45%);
+            --primary-foreground: hsl(160, 25%, 6%);
+            --muted: hsl(160, 15%, 12%);
+            --muted-foreground: hsl(160, 5%, 60%);
+            --accent: hsl(160, 20%, 10%);
+            --accent-foreground: hsl(155, 50%, 65%);
+            --card: hsl(160, 20%, 8%);
+            --sidebar: hsl(160, 25%, 4%);
+        }
+
+        body { font-family: 'Inter', 'Noto Sans SC', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        .h-serif { font-family: 'Noto Serif SC', serif; }
+        .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .history-scrollbar::-webkit-scrollbar { width: 3px; }
+        .history-scrollbar::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.05); border-radius: 10px; }
+        
+        @keyframes pulse-soft {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .animate-pulse-soft { animation: pulse-soft 2s infinite; }
+
+        @keyframes recording-float {
+            0%, 100% { transform: translate(-50%, 0); }
+            50% { transform: translate(-50%, -8px); }
+        }
+        .animate-float { animation: recording-float 2s ease-in-out infinite; }
+
+        @keyframes stop-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        .animate-stop-pulse { animation: stop-pulse 1.5s infinite; }
+
+        .ai-message-container { display: flex; align-items: flex-start; gap: 1rem; }
+        .ai-avatar-wrapper { flex-shrink: 0; padding-top: 4px; }
+        
+        #sidebar-overlay { transition: opacity 0.3s ease; }
+        aside { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        .view-section { transition: opacity 0.2s ease-in-out; }
+
+        /* 表格排版增强 */
+        .tabular-nums { font-variant-numeric: tabular-nums; }
+    </style>
+</head>
+<body class="bg-background text-foreground antialiased transition-colors duration-200">
+
+    <div class="flex h-dvh w-full overflow-hidden relative">
+        
+        <!-- Mobile Sidebar Overlay -->
+        <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 hidden md:hidden opacity-0"></div>
+
+        <!-- 左侧导航 (Sidebar) -->
+        <aside id="main-sidebar" style="background-color: var(--sidebar)" class="fixed inset-y-0 left-0 z-50 w-72 border-r border-border -translate-x-full md:relative md:translate-x-0 flex flex-col transition-colors duration-300">
+            <!-- Sidebar Header -->
+            <div class="p-4 pb-2 flex items-center justify-between">
+                <div class="flex items-center gap-2.5 select-none">
+                    <div class="size-6 rounded bg-emerald-900 dark:bg-emerald-500 flex items-center justify-center text-white dark:text-emerald-950">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-4">
+                            <path d="M12 2L4.5 9v6L12 22l7.5-7V9L12 2z"/>
+                            <path d="M12 22V12"/><path d="m12 12 5-3"/><path d="m12 12-5-3"/><circle cx="12" cy="7" r="1" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-bold tracking-tight text-emerald-900 dark:text-emerald-500 uppercase">Talent Flow</span>
+                </div>
+                <button onclick="toggleSidebar()" aria-label="收起侧边栏" class="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-muted-foreground transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="9" x2="9" y1="3" y2="21"/></svg>
+                </button>
+            </div>
+
+            <!-- Action: New Chat -->
+            <div class="p-4 pt-2">
+                <button onclick="showView('empty')" class="w-full flex items-center justify-between px-4 py-2.5 bg-white dark:bg-emerald-950/20 border border-border rounded-xl shadow-sm hover:bg-stone-50 dark:hover:bg-emerald-950/40 transition-all group active:scale-95 text-foreground">
+                    <div class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-700 dark:text-emerald-400"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                        <span class="text-sm font-semibold tracking-tight">开启新对话</span>
+                    </div>
+                </button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto no-scrollbar">
+                <!-- User Specific Menus -->
+                <nav class="px-3 space-y-1">
+                    <button onclick="showView('active')" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium hover:bg-black/5 dark:hover:bg-white/5 transition-all text-left">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="size-4 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/></svg>
+                        当前对话
+                    </button>
+                    <button onclick="showView('archive')" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium hover:bg-black/5 dark:hover:bg-white/5 transition-all text-left text-foreground/70 dark:text-foreground/60">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="size-4 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                        天赋存档
+                    </button>
+                    <button onclick="showView('tasks')" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium hover:bg-black/5 dark:hover:bg-white/5 transition-all text-left text-foreground/70 dark:text-foreground/60">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="size-4 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                        任务管理
+                    </button>
+                </nav>
+
+                <!-- Divider -->
+                <div class="h-px bg-border my-4 mx-6"></div>
+
+                <!-- System Level Menus -->
+                <nav class="px-3 space-y-1">
+                    <p class="px-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">管理中心</p>
+                    <button onclick="showView('users')" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium hover:bg-black/5 dark:hover:bg-white/5 transition-all text-left text-foreground/70 dark:text-foreground/60">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="size-4 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="19" cy="11" r="2"/></svg>
+                        用户管理
+                    </button>
+                    <button onclick="showView('invites')" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium hover:bg-black/5 dark:hover:bg-white/5 transition-all text-left text-foreground/70 dark:text-foreground/60">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="size-4 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+                        我的邀请
+                    </button>
+                    <button onclick="showView('settings')" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium hover:bg-black/5 dark:hover:bg-white/5 transition-all text-left text-foreground/70 dark:text-foreground/60">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="size-4 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                        系统设置
+                    </button>
+                </nav>
+
+                <div class="h-px bg-border my-4 mx-6"></div>
+
+                <div class="mt-4 flex flex-col min-h-0 pb-10">
+                    <p class="px-6 text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3 tracking-tighter">会话记录</p>
+                    <div class="px-3 space-y-0.5">
+                        <a href="#" onclick="showView('active')" class="block px-3 py-2 rounded-lg text-xs text-foreground/80 hover:bg-black/5 dark:hover:bg-white/5 truncate transition-all">
+                            关于跨部门协调中的系统平衡
+                        </a>
+                        <a href="#" class="block px-3 py-2 rounded-lg text-xs text-foreground/60 hover:bg-black/5 dark:hover:bg-white/5 truncate transition-all">
+                            识别隐性天赋：观察者的逻辑
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer: User Profile -->
+            <div class="p-4 border-t border-border relative shrink-0">
+                <div id="user-menu" class="hidden absolute bottom-full left-4 right-4 mb-2 bg-white dark:bg-zinc-900 border border-border rounded-xl shadow-xl py-1 z-[60]">
+                    <button class="w-full px-4 py-2.5 text-left text-xs hover:bg-stone-50 dark:hover:bg-white/5 transition-colors flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="size-3.5 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        个人资料
+                    </button>
+                    <button onclick="toggleDarkMode()" class="w-full px-4 py-2.5 text-left text-xs hover:bg-stone-50 dark:hover:bg-white/5 transition-colors flex items-center gap-2 text-pretty">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="size-3.5 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                        外观切换
+                    </button>
+                    <div class="h-px bg-border my-1"></div>
+                    <button class="w-full px-4 py-2.5 text-left text-xs text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+                        退出登录
+                    </button>
+                </div>
+
+                <button onclick="toggleUserMenu()" class="w-full p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl flex items-center gap-3 text-left transition-all" id="user-profile-btn">
+                    <div class="size-8 rounded-full bg-emerald-800 dark:bg-emerald-600 flex items-center justify-center font-bold text-white text-xs shrink-0 tabular-nums">CM</div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs font-bold truncate">Cold Mirror</p>
+                        <p class="text-[10px] text-muted-foreground uppercase tracking-tighter">Pro Member</p>
+                    </div>
+                    <svg id="chevron-icon" xmlns="http://www.w3.org/2000/svg" class="size-3.5 text-muted-foreground transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+                </button>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="flex-1 flex flex-col min-w-0 bg-background h-full overflow-hidden transition-colors duration-300">
+            <!-- Header -->
+            <header class="flex items-center gap-4 h-14 px-4 md:px-6 border-b border-border shrink-0 bg-background/80 backdrop-blur-md z-10">
+                <button onclick="toggleSidebar()" aria-label="打开侧边栏" class="md:hidden p-1.5 rounded-lg hover:bg-muted transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                </button>
+                <div id="header-title" class="flex items-center gap-2">
+                    <span class="text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-100 dark:border-emerald-800 uppercase tracking-tight tabular-nums font-mono">V1.2.0</span>
+                    <h2 class="text-sm font-semibold truncate text-pretty">欢迎回来</h2>
+                </div>
+            </header>
+
+            <!-- 视图容器 -->
+            <div id="view-container" class="flex-1 overflow-y-auto no-scrollbar">
+                
+                <!-- 1. 空白起步页 -->
+                <section id="empty-view" class="view-section flex flex-col items-center justify-center min-h-full px-6 py-10 max-w-2xl mx-auto text-center">
+                    <div class="size-16 bg-accent rounded-3xl flex items-center justify-center mb-8 text-emerald-800 dark:text-emerald-400">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-8">
+                            <path d="M12 2L4.5 9v6L12 22l7.5-7V9L12 2z"/><path d="M12 22V12"/><path d="m12 12 5-3"/><path d="m12 12-5-3"/><circle cx="12" cy="7" r="1" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h1 class="text-2xl md:text-3xl font-bold text-balance mb-4 tracking-tight h-serif">今天想深入挖掘哪方面的天赋？</h1>
+                    <p class="text-sm text-muted-foreground text-pretty mb-10 max-w-sm">分享一段让你感到“心流”的经历，或者直接问我关于你核心能力的洞察。</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+                        <button onclick="showView('active')" class="p-4 text-left border border-border rounded-2xl hover:bg-accent transition-all group bg-card">
+                            <span class="block text-xs font-bold text-emerald-700 dark:text-emerald-500 mb-1">能力诊断</span>
+                            <span class="text-sm text-pretty opacity-80">“帮我分析一下我在跨部门协作中的风格。”</span>
+                        </button>
+                        <button class="p-4 text-left border border-border rounded-2xl hover:bg-accent transition-all group bg-card">
+                            <span class="block text-xs font-bold text-emerald-700 dark:text-emerald-500 mb-1">职业建议</span>
+                            <span class="text-sm text-pretty opacity-80">“根据我的天赋，有哪些更适合我的岗位？”</span>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- 2. 活跃对话页 -->
+                <section id="active-view" class="view-section hidden flex-col min-h-full">
+                    <!-- 此处保持原有的聊天逻辑展示... -->
+                    <div class="max-w-2xl mx-auto py-10 px-4 md:px-0 space-y-10 w-full text-pretty text-sm">活跃对话内容...</div>
+                </section>
+
+                <!-- 5. 用户管理页 (Enhanced with Role Setting) -->
+                <section id="users-view" class="view-section hidden p-6 md:p-10 max-w-5xl mx-auto">
+                    <header class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+                        <div>
+                            <h1 class="text-2xl font-bold h-serif tracking-tight">用户管理</h1>
+                            <p class="text-sm text-muted-foreground mt-1">全局管理平台用户权限与系统角色</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <div class="relative">
+                                <input type="text" placeholder="搜索用户名或邮箱..." class="pl-9 pr-4 py-2 bg-muted border border-border rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all min-w-[240px]">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-2.5 size-4 opacity-40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                            </div>
+                        </div>
+                    </header>
+                    
+                    <div class="bg-card border border-border rounded-2xl overflow-hidden overflow-x-auto">
+                        <table class="w-full text-left border-collapse min-w-[600px]">
+                            <thead>
+                                <tr class="border-b border-border bg-muted/30">
+                                    <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">用户详情</th>
+                                    <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">分配角色</th>
+                                    <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">状态</th>
+                                    <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">注册时间</th>
+                                    <th class="px-6 py-4"></th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-border">
+                                <tr class="hover:bg-muted/10 transition-colors">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <div class="size-9 rounded-full bg-emerald-100 dark:bg-emerald-900 flex items-center justify-center font-bold text-emerald-700 dark:text-emerald-400 text-xs">JD</div>
+                                            <div>
+                                                <p class="text-sm font-bold">John Doe</p>
+                                                <p class="text-[10px] text-muted-foreground">john@example.com</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <select class="bg-muted border border-border rounded-lg px-2 py-1 text-xs focus:ring-1 focus:ring-emerald-500/30 outline-none">
+                                            <option>探索者</option>
+                                            <option selected>教练</option>
+                                            <option>管理员</option>
+                                        </select>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold border border-emerald-100 dark:border-emerald-800">
+                                            <span class="size-1.5 rounded-full bg-current"></span> 已激活
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-[11px] tabular-nums text-muted-foreground">2026-01-18</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button class="p-1 hover:bg-muted rounded-lg transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="size-4 opacity-40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
+                                    </td>
+                                </tr>
+                                <!-- 更多用户行... -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- 6. 邀请管理页 (Enhanced with Multiple Channels & Invitee List) -->
+                <section id="invites-view" class="view-section hidden p-6 md:p-10 max-w-5xl mx-auto">
+                    <header class="mb-10">
+                        <h1 class="text-2xl font-bold h-serif tracking-tight">我的邀请</h1>
+                        <p class="text-sm text-muted-foreground mt-1">多渠道管理您的分享链接，查看所有受邀成员</p>
+                    </header>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Left: Channel Setup -->
+                        <div class="lg:col-span-1 space-y-6">
+                            <div class="p-6 border border-border rounded-3xl bg-card space-y-4">
+                                <h3 class="text-xs font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400">渠道管理</h3>
+                                <div class="space-y-2">
+                                    <button class="w-full px-4 py-2 bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-800 rounded-xl text-left text-xs font-bold flex justify-between items-center group">
+                                        <span>通用链接 (Default)</span>
+                                        <span class="opacity-40 text-[9px] tabular-nums">12次邀请</span>
+                                    </button>
+                                    <button class="w-full px-4 py-2 border border-border rounded-xl text-left text-xs hover:bg-muted transition-colors flex justify-between items-center opacity-70">
+                                        <span>微信朋友圈 2026</span>
+                                        <span class="opacity-40 text-[9px] tabular-nums">4次邀请</span>
+                                    </button>
+                                    <button class="w-full px-4 py-2 border-2 border-dashed border-border rounded-xl text-center text-[10px] font-bold text-muted-foreground hover:border-emerald-500/50 hover:text-emerald-600 transition-all mt-2">
+                                        + 创建新渠道
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="p-6 border border-border rounded-3xl bg-card">
+                                <div class="flex items-center gap-3 mb-4">
+                                    <div class="size-8 rounded-xl bg-emerald-50 dark:bg-emerald-950 flex items-center justify-center text-emerald-700 dark:text-emerald-400">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                                    </div>
+                                    <h4 class="text-sm font-bold">当前链接</h4>
+                                </div>
+                                <div class="bg-muted px-4 py-3 rounded-xl font-mono text-[11px] break-all select-all border border-border mb-3">
+                                    talentflow.ai/join?ref=GEN_2026
+                                </div>
+                                <button class="w-full py-2 bg-emerald-700 dark:bg-emerald-600 text-white rounded-xl text-xs font-bold hover:opacity-90 active:scale-95 transition-all">复制邀请链接</button>
+                            </div>
+                        </div>
+
+                        <!-- Right: Invitee Detail List -->
+                        <div class="lg:col-span-2 space-y-6">
+                            <h3 class="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-2">邀请明细 (Invited Guests)</h3>
+                            <div class="bg-card border border-border rounded-3xl overflow-hidden">
+                                <div class="divide-y divide-border">
+                                    <!-- Invitee Item -->
+                                    <div class="p-5 flex items-center justify-between group hover:bg-muted/10 transition-colors">
+                                        <div class="flex items-center gap-4">
+                                            <div class="size-10 rounded-full bg-stone-100 dark:bg-zinc-800 flex items-center justify-center font-bold text-stone-500 text-xs tabular-nums">ML</div>
+                                            <div>
+                                                <p class="text-sm font-bold">Mike Lewis</p>
+                                                <p class="text-[10px] text-muted-foreground uppercase tracking-tight tabular-nums">Joined 2026.01.20 via WeChat</p>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">已激活服务</p>
+                                            <p class="text-[9px] text-muted-foreground tabular-nums tracking-tighter">权益：+30 Days Pro</p>
+                                        </div>
+                                    </div>
+                                    <div class="p-5 flex items-center justify-between group hover:bg-muted/10 transition-colors">
+                                        <div class="flex items-center gap-4">
+                                            <div class="size-10 rounded-full bg-stone-100 dark:bg-zinc-800 flex items-center justify-center font-bold text-stone-500 text-xs tabular-nums">SA</div>
+                                            <div>
+                                                <p class="text-sm font-bold">Sarah Adams</p>
+                                                <p class="text-[10px] text-muted-foreground uppercase tracking-tight tabular-nums">Joined 2026.01.18 via Partner</p>
+                                            </div>
+                                        </div>
+                                        <div class="text-right opacity-50">
+                                            <p class="text-[10px] font-bold">等待验证</p>
+                                            <p class="text-[9px] tabular-nums tracking-tighter">--</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- 其他视图（存档、任务、设置）保持原有内容... -->
+                <section id="archive-view" class="view-section hidden p-10">存档视图内容...</section>
+                <section id="tasks-view" class="view-section hidden p-10">任务管理视图内容...</section>
+                <section id="settings-view" class="view-section hidden p-10">设置视图内容...</section>
+            </div>
+
+            <!-- Footer Area -->
+            <footer id="chat-footer" class="p-4 md:pb-8 md:pt-4 safe-area-bottom shrink-0 bg-background relative transition-all duration-300">
+                <div id="recording-pill" class="hidden absolute left-1/2 -translate-x-1/2 -top-14 z-20">
+                    <div class="bg-emerald-800 dark:bg-emerald-600 text-white px-5 py-2.5 rounded-2xl shadow-xl flex items-center gap-3 text-xs font-bold animate-float ring-4 ring-emerald-900/10">
+                        <div class="size-2.5 bg-white rounded-sm animate-stop-pulse"></div>
+                        <span>正在倾听... 点击麦克风停止</span>
+                    </div>
+                </div>
+                <div class="max-w-2xl mx-auto relative group">
+                    <textarea rows="1" id="chat-input" class="w-full p-4 pr-24 rounded-2xl bg-muted border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-card transition-all resize-none text-sm leading-relaxed" placeholder="分享一段经历..."></textarea>
+                    <div class="absolute right-2 top-2.5 flex items-center gap-1">
+                        <button id="voice-btn" onclick="toggleVoice()" aria-label="语音输入" class="size-9 flex items-center justify-center rounded-xl text-muted-foreground hover:text-emerald-700 dark:hover:text-emerald-400 hover:bg-accent transition-all active:scale-90">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+                        </button>
+                        <button onclick="handleSend()" aria-label="发送消息" class="size-9 flex items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm hover:opacity-90 active:scale-95 transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const textarea = document.getElementById('chat-input');
+        textarea.addEventListener('input', () => {
+            textarea.style.height = 'auto';
+            textarea.style.height = (textarea.scrollHeight) + 'px';
+        });
+
+        function showView(viewName) {
+            const views = ['empty', 'active', 'archive', 'tasks', 'users', 'invites', 'settings'];
+            views.forEach(v => document.getElementById(`${v}-view`).classList.add('hidden'));
+            document.getElementById(`${viewName}-view`).classList.remove('hidden');
+            
+            const headerTitle = document.querySelector('#header-title h2');
+            const footer = document.getElementById('chat-footer');
+            
+            const titles = {
+                'active': '深度挖掘中', 'empty': '欢迎回来', 'archive': '天赋存档',
+                'tasks': '任务管理', 'users': '用户管理', 'invites': '我的邀请', 'settings': '系统设置'
+            };
+            headerTitle.innerText = titles[viewName];
+            footer.classList.toggle('hidden', !['active', 'empty'].includes(viewName));
+            if (window.innerWidth < 768) toggleSidebar();
+        }
+
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('main-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        function toggleUserMenu() {
+            const menu = document.getElementById('user-menu');
+            const chevron = document.getElementById('chevron-icon');
+            const isHidden = menu.classList.toggle('hidden');
+            chevron.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
+        }
+
+        let isRecording = false;
+        function toggleVoice() {
+            isRecording = !isRecording;
+            document.getElementById('recording-pill').classList.toggle('hidden', !isRecording);
+            document.getElementById('voice-btn').classList.toggle('text-emerald-700', isRecording);
+        }
+
+        function handleSend() {
+            if (textarea.value.trim() !== "") {
+                showView('active');
+                textarea.value = "";
+                textarea.style.height = 'auto';
+            }
+        }
+
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('user-menu');
+            const btn = document.getElementById('user-profile-btn');
+            if (menu && !btn.contains(e.target) && !menu.contains(e.target)) {
+                menu.classList.add('hidden');
+                document.getElementById('chevron-icon').style.transform = 'rotate(0deg)';
+            }
+        });
+    </script>
+</body>
+</html>

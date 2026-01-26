@@ -58,100 +58,109 @@ export function InviteCodeManager({
 
   return (
     <div className="space-y-6">
-      {/* Create Section */}
-      {codes.length < 5 && (
-        <div className="bg-zinc-900/40 border border-zinc-800/50 rounded-2xl p-6 backdrop-blur-sm">
-          <h3 className="text-sm font-bold text-zinc-100 uppercase tracking-widest mb-4 flex items-center gap-2">
-            <Plus className="size-4 text-blue-500" />
-            生成新邀请码
-          </h3>
-          <div className="flex gap-3">
-            <input
-              type="text"
-              value={channel}
-              onChange={(e) => setChannel(e.target.value)}
-              placeholder="输入分发渠道（如：朋友圈、知乎...）"
-              className="flex-1 bg-zinc-800/50 border border-zinc-700/50 rounded-xl px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-blue-500/50 transition-all"
-            />
-            <button
-              onClick={handleCreate}
-              disabled={isCreating || !channel.trim()}
-              className="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-blue-900/20 flex items-center gap-2"
+      {/* Channel List Section */}
+      <div className="p-6 border border-border rounded-3xl bg-card space-y-4 shadow-sm">
+        <h3 className="text-xs font-bold uppercase tracking-widest text-primary">
+          活跃渠道
+        </h3>
+        <div className="space-y-2">
+          {codes.map((item) => (
+            <div
+              key={item.id}
+              className={cn(
+                "w-full px-4 py-2 border rounded-xl text-left text-xs transition-all flex justify-between items-center group",
+                copiedCode === item.code
+                  ? "bg-primary/10 border-primary/30"
+                  : "border-border hover:bg-muted/50",
+              )}
             >
-              {isCreating ? "生成中..." : "生成邀请码"}
-            </button>
+              <div className="flex flex-col">
+                <span className="font-bold text-foreground">
+                  {item.channel || "默认渠道"}
+                </span>
+                <span className="text-[10px] tabular-nums text-muted-foreground mr-2">
+                  {item.usedCount} 次邀请 / {item.maxUses}
+                </span>
+              </div>
+              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                  onClick={() => copyToClipboard(item.code)}
+                  className="p-1.5 hover:bg-primary/10 rounded-lg text-primary transition-colors"
+                  title="复制邀请码"
+                >
+                  {copiedCode === item.code ? (
+                    <Check className="size-3.5" />
+                  ) : (
+                    <Copy className="size-3.5" />
+                  )}
+                </button>
+                <button
+                  onClick={() => handleDelete(item.id)}
+                  className="p-1.5 hover:bg-destructive/10 rounded-lg text-destructive transition-colors"
+                  title="删除频道"
+                >
+                  <Trash2 className="size-3.5" />
+                </button>
+              </div>
+            </div>
+          ))}
+
+          {codes.length < 5 && (
+            <div className="pt-2">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={channel}
+                  onChange={(e) => setChannel(e.target.value)}
+                  placeholder="新渠道名..."
+                  className="flex-1 bg-muted border border-border rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary/30"
+                />
+                <button
+                  onClick={handleCreate}
+                  disabled={isCreating || !channel.trim()}
+                  className="px-3 py-1.5 bg-primary text-primary-foreground rounded-xl text-[10px] font-bold hover:opacity-90 disabled:opacity-50 transition-all flex items-center gap-1"
+                >
+                  <Plus className="size-3" />
+                  {isCreating ? "创建中" : "创建"}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Current Link Section (Prototype style) */}
+      {codes.length > 0 && (
+        <div className="p-6 border border-border rounded-3xl bg-card shadow-sm">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+              <Info className="size-4" />
+            </div>
+            <h4 className="text-sm font-bold text-foreground">当前选中详情</h4>
           </div>
-          <p className="text-[10px] text-zinc-500 mt-3 flex items-center gap-1">
+          <p className="text-[10px] text-muted-foreground mb-2 flex items-center gap-1">
             <Info className="size-3" />
-            每个用户最多可创建 5 个活跃邀请码。每个邀请码默认可使用 100 次。
+            点击上方渠道即可快速复制。默认受邀用户可获得相应等级权益。
           </p>
+          <div className="bg-muted px-4 py-3 rounded-xl font-mono text-[11px] break-all select-all border border-border mb-3 text-foreground/80">
+            {codes[0].code}
+          </div>
+          <button
+            onClick={() => copyToClipboard(codes[0].code)}
+            className="w-full py-2 bg-primary text-primary-foreground rounded-xl text-xs font-bold hover:opacity-90 active:scale-95 transition-all"
+          >
+            复制首选邀请码
+          </button>
         </div>
       )}
 
-      {/* List Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {codes.map((item) => (
-          <div
-            key={item.id}
-            className="bg-zinc-900/20 border border-zinc-800/50 rounded-2xl p-5 hover:bg-zinc-900/30 transition-all group"
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <div className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest mb-1">
-                  渠道
-                </div>
-                <div className="text-zinc-100 font-medium">
-                  {item.channel || "默认渠道"}
-                </div>
-              </div>
-              <button
-                onClick={() => handleDelete(item.id)}
-                className="p-2 text-zinc-600 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all opacity-0 group-hover:opacity-100"
-              >
-                <Trash2 className="size-4" />
-              </button>
-            </div>
-
-            <div className="bg-zinc-950/50 border border-zinc-800/50 rounded-xl p-3 flex items-center justify-between mb-4">
-              <code className="text-blue-400 font-mono font-bold tracking-wider">
-                {item.code}
-              </code>
-              <button
-                onClick={() => copyToClipboard(item.code)}
-                className="p-2 text-zinc-500 hover:text-zinc-200 transition-colors"
-                title="复制邀请码"
-              >
-                {copiedCode === item.code ? (
-                  <Check className="size-4 text-green-500" />
-                ) : (
-                  <Copy className="size-4" />
-                )}
-              </button>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="text-[10px] text-zinc-500 font-mono">
-                使用进度:{" "}
-                <span className="text-zinc-300">{item.usedCount}</span> /{" "}
-                {item.maxUses}
-              </div>
-              <div className="h-1 flex-1 mx-4 bg-zinc-800 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-blue-600"
-                  style={{
-                    width: `${Math.min(100, (item.usedCount / item.maxUses) * 100)}%`,
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        ))}
-        {codes.length === 0 && !isCreating && (
-          <div className="col-span-full border-2 border-dashed border-zinc-800/50 rounded-2xl p-8 text-center">
-            <p className="text-zinc-600 text-sm">尚未创建任何邀请码</p>
-          </div>
-        )}
-      </div>
+      {codes.length === 0 && !isCreating && (
+        <div className="border-2 border-dashed border-border rounded-3xl p-8 text-center bg-card/50">
+          <p className="text-muted-foreground text-xs font-medium">
+            尚未创建任何邀请渠道
+          </p>
+        </div>
+      )}
     </div>
   );
 }

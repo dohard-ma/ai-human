@@ -43,7 +43,7 @@ export function UserRoleButtons({
   };
 
   return (
-    <div className="flex items-center justify-end gap-1">
+    <div className="flex items-center justify-end gap-1.5">
       {allRoles.map((role) => {
         const isActive = currentRoles.includes(role.name);
         return (
@@ -52,20 +52,24 @@ export function UserRoleButtons({
             onClick={() => toggleRole(role.name)}
             disabled={isUpdating}
             className={cn(
-              "px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all duration-200 border flex items-center gap-1.5",
+              "px-3 py-1 rounded-lg text-[10px] font-bold transition-all duration-200 border flex items-center gap-1.5 active:scale-95",
               isActive
-                ? "bg-zinc-100 text-zinc-900 border-zinc-100 shadow-lg"
-                : "bg-transparent text-zinc-500 border-zinc-800 hover:border-zinc-700 hover:text-zinc-300",
+                ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                : "bg-muted text-muted-foreground border-border hover:border-primary/30 hover:text-primary",
               isUpdating && "opacity-50 cursor-not-allowed",
             )}
           >
-            {isActive && <Check className="size-3" />}
+            {isActive ? (
+              <Check className="size-3 stroke-[3]" />
+            ) : (
+              <span className="size-3" />
+            )}
             {role.name}
           </button>
         );
       })}
       {isUpdating && (
-        <Loader2 className="size-3 animate-spin text-zinc-500 ml-2" />
+        <Loader2 className="size-3 animate-spin text-primary ml-1" />
       )}
     </div>
   );
