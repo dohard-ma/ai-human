@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Sans_SC, Noto_Serif_SC } from "next/font/google";
 import { cookies } from "next/headers";
+import { SessionProvider } from "@/components/providers/session-provider";
 import "./globals.css";
 
 const inter = Inter({
@@ -76,7 +77,7 @@ export default async function RootLayout({
       <body
         className={`${inter.variable} ${notoSansSC.variable} ${notoSerifSC.variable} antialiased`}
       >
-        {children}
+        <SessionProvider>{children}</SessionProvider>
       </body>
     </html>
   );

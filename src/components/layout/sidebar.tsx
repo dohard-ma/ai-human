@@ -20,6 +20,7 @@ import {
   MoreHorizontal,
   Pencil,
   Trash2,
+  FileText,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { signOut } from "next-auth/react";
@@ -303,6 +304,12 @@ export function Sidebar({
               href="/archives"
               icon={LayoutDashboard}
               label="天赋存档"
+              onClick={handleNavClick}
+            />
+            <NavItem
+              href="/reports"
+              icon={FileText}
+              label="天赋报告"
               onClick={handleNavClick}
             />
             <NavItem

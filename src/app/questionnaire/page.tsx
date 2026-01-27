@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useQuestionnaire } from "@/hooks/use-questionnaire";
 import { useAudio, useSoundEffect } from "@/hooks/use-audio";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ import {
     CheckCircle2,
     Lock,
     Clock,
+    Loader2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -36,6 +38,7 @@ const CONVERSION_MESSAGES = [
 
 export default function QuestionnairePage() {
     const router = useRouter();
+    const { data: session } = useSession();
     const [stage, setStage] = useState<"info" | "questionnaire" | "complete">(
         "info"
     );
@@ -45,6 +48,7 @@ export default function QuestionnairePage() {
         occupation: "",
     });
     const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
+    const [isGenerating, setIsGenerating] = useState(false);
 
     const {
         currentQuestion,
@@ -130,12 +134,23 @@ export default function QuestionnairePage() {
         clickSound.play();
 
         const allAnswers = getAllAnswers();
-        // TODO: 保存到数据库或发送给 AI
         console.log("User Info:", userInfo);
         console.log("All Answers:", allAnswers);
 
-        // 跳转到聊天页面
-        router.push("/chat");
+        // 如果用户已登录，直接生成报告并跳转
+        if (session?.user) {
+            setIsGenerating(true);
+
+            // TODO: 调用 API 生成报告
+            // 模拟生成过程
+            await new Promise((resolve) => setTimeout(resolve, 1500));
+
+            // 跳转到天赋存档页面
+            router.push("/archives");
+        } else {
+            // 未登录用户，保持当前页面（显示付费提示）
+            // 不做任何操作，用户会看到付费界面
+        }
     };
 
     // 基础信息收集阶段
@@ -384,70 +399,108 @@ export default function QuestionnairePage() {
                     </div>
                 </div>
 
-                {/* 底部固定价格区 */}
-                <div className="fixed bottom-28 left-0 right-0 flex justify-center px-6 py-5 bg-background/98 backdrop-blur-xl shadow-[0_-8px_24px_-4px_rgba(0,0,0,0.12)]">
-                    <div className="max-w-3xl w-full space-y-4">
-                        {/* 价值主张文案 */}
-                        <div className="flex justify-center">
-                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-lg transition-all duration-300">
-                                <Clock className="size-4 text-primary shrink-0" />
-                                <p className="text-sm font-medium text-foreground animate-in fade-in duration-500">
-                                    {CONVERSION_MESSAGES[currentMessageIndex]}
-                                </p>
+                {/* 底部固定价格区 - 仅未登录用户显示 */}
+                {!session?.user && !isGenerating && (
+                    <div className="fixed bottom-28 left-0 right-0 flex justify-center px-6 py-5 bg-background/98 backdrop-blur-xl shadow-[0_-8px_24px_-4px_rgba(0,0,0,0.12)]">
+                        <div className="max-w-3xl w-full space-y-4">
+                            {/* 价值主张文案 */}
+                            <div className="flex justify-center">
+                                <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-lg transition-all duration-300">
+                                    <Clock className="size-4 text-primary shrink-0" />
+                                    <p className="text-sm font-medium text-foreground animate-in fade-in duration-500">
+                                        {CONVERSION_MESSAGES[currentMessageIndex]}
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                        {/* 价格和优惠 */}
-                        <div className="bg-primary/5 border-2 border-primary/30 rounded-xl p-5 space-y-4">
-                            <div className="flex items-baseline gap-3">
-                                <div className="space-y-1">
-                                    <div className="flex items-baseline gap-2">
-                                        <span className="text-3xl font-bold text-primary tabular-nums">
-                                            ¥49
-                                        </span>
-                                        <span className="text-lg text-muted-foreground line-through tabular-nums">
-                                            ¥199
-                                        </span>
-                                    </div>
+                            {/* 价格和优惠 */}
+                            <div className="bg-primary/5 border-2 border-primary/30 rounded-xl p-5 space-y-4">
+                                <div className="flex items-baseline gap-3">
+                                    <div className="space-y-1">
+                                        <div className="flex items-baseline gap-2">
+                                            <span className="text-3xl font-bold text-primary tabular-nums">
+                                                ¥49
+                                            </span>
+                                            <span className="text-lg text-muted-foreground line-through tabular-nums">
+                                                ¥199
+                                            </span>
+                                        </div>
 
-                                </div>
-                                <div className="ml-auto">
-                                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/20 text-primary text-xs font-bold rounded-full">
-                                        <span>🔥</span>
-                                        <span>限时 75% OFF</span>
+                                    </div>
+                                    <div className="ml-auto">
+                                        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/20 text-primary text-xs font-bold rounded-full">
+                                            <span>🔥</span>
+                                            <span>限时 75% OFF</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                <CheckCircle2 className="size-4 text-primary" />
-                                <span>一次付费，永久查看</span>
+                                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                    <CheckCircle2 className="size-4 text-primary" />
+                                    <span>一次付费，永久查看</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                )}
+
+                {/* 生成中状态提示 - 已登录用户点击后显示 */}
+                {session?.user && isGenerating && (
+                    <div className="fixed bottom-28 left-0 right-0 flex justify-center px-6 py-5 bg-background/98 backdrop-blur-xl shadow-[0_-8px_24px_-4px_rgba(0,0,0,0.12)]">
+                        <div className="max-w-3xl w-full">
+                            <div className="bg-primary/5 border-2 border-primary/30 rounded-xl p-6 space-y-3">
+                                <div className="flex items-center justify-center gap-3">
+                                    <Loader2 className="size-6 text-primary animate-spin" />
+                                    <p className="text-lg font-semibold text-foreground">
+                                        天赋报告正在生成中...
+                                    </p>
+                                </div>
+                                <p className="text-sm text-muted-foreground text-center text-pretty">
+                                    AI 正在深度分析您的回答，请稍候
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {/* 底部固定按钮 */}
                 <div className="fixed bottom-0 left-0 right-0 flex justify-center px-6 pt-3 pb-6 bg-background/98 backdrop-blur-xl safe-area-bottom">
                     <div className="max-w-3xl w-full space-y-3">
                         <Button
                             onClick={handleSubmitAll}
+                            disabled={isGenerating}
                             size="lg"
                             className="w-full h-14 text-base font-bold rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all"
                         >
-                            <Lock className="size-5 mr-2" />
-                            解锁我的完整天赋
+                            {isGenerating ? (
+                                <>
+                                    <Loader2 className="size-5 mr-2 animate-spin" />
+                                    生成中...
+                                </>
+                            ) : session?.user ? (
+                                <>
+                                    <Sparkles className="size-5 mr-2" />
+                                    生成我的天赋报告
+                                </>
+                            ) : (
+                                <>
+                                    <Lock className="size-5 mr-2" />
+                                    解锁我的完整天赋
+                                </>
+                            )}
                         </Button>
 
-                        <Button
-                            onClick={() => {
-                                clickSound.play();
-                                setStage("questionnaire");
-                            }}
-                            variant="ghost"
-                            size="sm"
-                            className="w-full text-sm text-muted-foreground hover:text-foreground"
-                        >
-                            返回修改答案
-                        </Button>
+                        {!isGenerating && (
+                            <Button
+                                onClick={() => {
+                                    clickSound.play();
+                                    setStage("questionnaire");
+                                }}
+                                variant="ghost"
+                                size="sm"
+                                className="w-full text-sm text-muted-foreground hover:text-foreground"
+                            >
+                                返回修改答案
+                            </Button>
+                        )}
                     </div>
                 </div>
             </div>
