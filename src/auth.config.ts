@@ -16,7 +16,9 @@ export const authConfig = {
 
       const isOnWelcome = pathname.startsWith("/welcome");
       const isOnSignIn = pathname.startsWith("/sign-in");
+      const isOnQuestionnaire = pathname.startsWith("/questionnaire");
       const isApiAuth = pathname.startsWith("/api/auth");
+      const isApiQuestionnaire = pathname.startsWith("/api/questionnaire");
 
       if (isLoggedIn) {
         if (isOnWelcome || isOnSignIn) {
@@ -29,8 +31,8 @@ export const authConfig = {
       }
 
       // 未登录时：
-      // 允许访问欢迎页、登录页以及 Auth API 路由
-      if (isOnWelcome || isOnSignIn || isApiAuth) {
+      // 允许访问欢迎页、登录页、问卷页、问卷API 以及 Auth API 路由
+      if (isOnWelcome || isOnSignIn || isOnQuestionnaire || isApiAuth || isApiQuestionnaire) {
         return true;
       }
 

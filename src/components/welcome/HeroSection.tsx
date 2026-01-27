@@ -72,7 +72,7 @@ export function HeroSection() {
             className="h-12 px-8 text-base font-bold rounded-xl"
             asChild
           >
-            <Link href="/sign-in">
+            <Link href="/questionnaire">
               <Sparkles className="size-5 mr-2" />
               立即开启挖掘之旅
             </Link>
